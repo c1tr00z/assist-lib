@@ -1,9 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public interface ISaveble {
 
-    Hash ToJSON();
-    void FromJSON(Hash hash);
+    Dictionary<string, object> ToJSON();
+    void FromJSON(Dictionary<string, object> json);
 }

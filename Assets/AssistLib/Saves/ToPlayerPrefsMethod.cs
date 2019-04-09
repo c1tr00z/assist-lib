@@ -1,15 +1,14 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class ToPlayerPrefsMethod : SaveMethod {
 
     private string _savesKey = "SaveGames";
 
-    public override void Load(string key, System.Action<Hash, System.Exception> complete) {
+    public override void Load(string key, System.Action<Dictionary<string, object>, System.Exception> complete) {
         if (complete != null) {
             if (_allSaves.ContainsKey(key)) {
-                complete(_allSaves.Get<Hash>(key), null);
+                complete(_allSaves.GetChild(key), null);
             } else { 
                 complete(null, null);
             }
@@ -32,14 +31,14 @@ public class ToPlayerPrefsMethod : SaveMethod {
         _allSaves.AddOrSet(key, null);
     }
 
-    private Hash _allSaves {
+    private Dictionary<string, object> _allSaves {
         get {
             var allSaves = PlayerPrefs.GetString(_savesKey);
-            var savesHash = Hash.FromJSON(allSaves);
-            return savesHash == null ? new Hash() : savesHash;
+            var savesHash = JSONUtuls.Deserialize(allSaves);
+            return savesHash == null ? new Dictionary<string, object>() : savesHash;
         }
         set {
-            PlayerPrefs.SetString(_savesKey, value.ToJSONString());
+            PlayerPrefs.SetString(_savesKey, JSONUtuls.Serialize(value));
             PlayerPrefs.Save();
         }
     }

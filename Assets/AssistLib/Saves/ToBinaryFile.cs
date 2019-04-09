@@ -10,7 +10,7 @@ public class ToBinaryFile : ToFile {
     [SerializeField]
     private int _keyCode;
 
-    protected override void LoadSaves(string key, Action<Hash, Exception> complete) {
+    protected override void LoadSaves(string key, Action<Dictionary<string, object>, Exception> complete) {
         StringBuilder sb = new StringBuilder();
         string allLines = null;
         //GetFileByName(key).Open(FileMode.OpenOrCreate);
@@ -24,7 +24,7 @@ public class ToBinaryFile : ToFile {
             if (string.IsNullOrEmpty(allLines)) {
                 complete(null, null);
             } else {
-                complete(Hash.FromJSON(allLines), null);
+                complete(JSONUtuls.Deserialize(allLines), null);
             }
         }
     }

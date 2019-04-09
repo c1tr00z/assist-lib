@@ -23,11 +23,13 @@ namespace c1tr00z.AssistLib.Localization {
             if (!_inited) {
                 _defaultLanguage = DB.Get<LanguageItem>(_defaultSystemLanguage.ToString());
 
-                if (string.IsNullOrEmpty(AssistLibSettings.language)) {
-                    ChangeLanguage(_currentSystemLanguage.ToString());
-                } else {
-                    ChangeLanguage(AssistLibSettings.language);
-                }
+                //if (string.IsNullOrEmpty(AssistLibEditorSettings.language)) {
+                //    ChangeLanguage(_currentSystemLanguage.ToString());
+                //} else {
+                //    ChangeLanguage(AssistLibEditorSettings.language);
+                //}
+
+                ChangeLanguage(_currentSystemLanguage.ToString());
 
                 _inited = true;
             }
@@ -55,11 +57,11 @@ namespace c1tr00z.AssistLib.Localization {
         }
 
         public static void ChangeLanguage(LanguageItem newLanguage) {
-            if (string.IsNullOrEmpty(AssistLibSettings.language)) {
-                AssistLibSettings.language = _currentSystemLanguage.ToString();
-                AssistLibSettings.Save();
-            }
-            _currentLanguage = DB.Get<LanguageItem>(AssistLibSettings.language);
+            //if (string.IsNullOrEmpty(AssistLibEditorSettings.language)) {
+            //    AssistLibEditorSettings.language = _currentSystemLanguage.ToString();
+            //    AssistLibEditorSettings.Save();
+            //}
+            _currentLanguage = DB.GetAll<LanguageItem>().RandomItem();
 
             if (_inited) {
                 changeLanguage(newLanguage);

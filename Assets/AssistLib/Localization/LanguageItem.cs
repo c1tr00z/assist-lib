@@ -10,7 +10,7 @@ public class LanguageItem : DBEntry {
         get {
             if (_translations == null || _translations.Count == 0) {
                 _translations = new Dictionary<string,string>();
-                var langHash = Hash.FromJSON(this.LoadText());
+                var langHash = JSONUtuls.Deserialize(this.LoadText());
                 langHash.ForEach(kvp => _translations.AddOrSet(kvp.Key, kvp.Value.ToString()));
             }
             return _translations;

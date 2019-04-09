@@ -30,7 +30,7 @@ public class Saves : MonoBehaviour {
         }
     }
 
-    private Hash _saveData;
+    private Dictionary<string, object> _saveData;
 
     void Awake() {
         _instance = this;
@@ -58,7 +58,7 @@ public class Saves : MonoBehaviour {
                 if (h == null) {
                     callback(false);
                     _saveKey = key;
-                    _saveData = new Hash();
+                    _saveData = new Dictionary<string, object>();
                 } else {
                     _saveKey = key;
                     _saveData = h;
@@ -84,8 +84,8 @@ public class Saves : MonoBehaviour {
         return defaultValue;
     }
 
-    public Hash LoadHash(string key) {
-        return Hash.FromObject(LoadObject(key, null));
+    public Dictionary<string, object> LoadHash(string key) {
+        return (Dictionary<string, object>)LoadObject(key, new Dictionary<string, object>());
     }
 
     public string LoadString(string key, string defaultValue = null) {
@@ -120,7 +120,7 @@ public class Saves : MonoBehaviour {
 
     public T LoadISavable<T>(string key, T savable) where T: ISaveble {
         string json = LoadString(key);
-        var hash = Hash.FromJSON(json);
+        var hash = JSONUtuls.Deserialize(json);
         savable.FromJSON(hash);
         return savable;
     }
@@ -132,7 +132,7 @@ public class Saves : MonoBehaviour {
 
     public void EraseSave(string key = null) {
         if (string.IsNullOrEmpty(key)) {
-            _saveData = new Hash();
+            _saveData = new Dictionary<string, object>();
         } else {
             _saveData.Remove(key);
         }
@@ -148,7 +148,7 @@ public class Saves : MonoBehaviour {
     void OnApplicationQuit() {
         if (_saveOnQuit) {
             if (_saveData != null) {
-                _currentMethod.Save(_saveKey, _saveData.ToJSONString(), (b, e) => { });
+                _currentMethod.Save(_saveKey, JSONUtuls.Serialize(_saveData), (b, e) => { });
             } else {
                 Debug.Log("Nothing to save");
             }

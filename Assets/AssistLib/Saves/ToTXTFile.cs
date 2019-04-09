@@ -7,7 +7,7 @@ using System.Text;
 
 public class ToTXTFile : ToFile {
 
-    protected override void LoadSaves(string key, System.Action<Hash, System.Exception> complete) {
+    protected override void LoadSaves(string key, System.Action<Dictionary<string, object>, System.Exception> complete) {
         StringBuilder sb = new StringBuilder();
         using (StreamReader sr = new StreamReader(GetFileByName(key).ToString())) {
             String line;
@@ -21,7 +21,7 @@ public class ToTXTFile : ToFile {
             if (string.IsNullOrEmpty(allines)) {
                 complete(null, null);
             } else {
-                complete(Hash.FromJSON(allines), null);
+                complete(JSONUtuls.Deserialize(allines), null);
             }
         }
     }

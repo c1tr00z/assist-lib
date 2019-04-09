@@ -17,9 +17,9 @@ public abstract class ToFile : SaveMethod {
         }
     }
 
-    protected abstract void LoadSaves(string key, System.Action<Hash, System.Exception> complete);
+    protected abstract void LoadSaves(string key, System.Action<Dictionary<string, object>, System.Exception> complete);
 
-    public override void Load(string key, System.Action<Hash, System.Exception> complete) {
+    public override void Load(string key, System.Action<Dictionary<string, object>, System.Exception> complete) {
         try {
             if (string.IsNullOrEmpty(key)) {
                 if (complete != null) {
