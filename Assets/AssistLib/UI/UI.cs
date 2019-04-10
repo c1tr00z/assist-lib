@@ -1,64 +1,69 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
-public class UI : MonoBehaviour {
+namespace c1tr00z.AssistLib.UI {
+    public class UI : BehaviourSingleton<UI> {
 
-    private UIFrameItem _currentFrameItem;
+        private Dictionary<UILayerDBEntry, UILayerBase> _layers = new Dictionary<UILayerDBEntry, UILayerBase>();
 
-    public UIFrameItem currentFrameItem {
-        get {
-            return _currentFrameItem;
-        }
-    }
+        private UIDefaultsDBEntry _uiDefaults;
 
-    private UIFrame _currentFrame;
+        private UILayerBase _defaultLayerSrc;
 
-    public UIFrame currentFrame {
-        get {
-            return _currentFrame;
-        }
-    }
-
-    private static UI _instance;
-
-    public static UI instance {
-        get {
-            return _instance;
-        }
-    }
-
-    void Awake() {
-        _instance = this;
-    }
-
-    public void Show(UIFrameItem newFrame) {
-        Show(newFrame, null);
-    }
-
-    public void Show(UIFrameItem newFrame, params object[] param) {
-        if (_currentFrame != null) {
-            Destroy(_currentFrame.gameObject);
-        }
-        _currentFrameItem = newFrame;
-        _currentFrame = _currentFrameItem.LoadFrame();
-        _currentFrame.transform.Reset(transform);
-        //_currentFrame.transform.localScale = Vector3.one;
-        var rectTransform = _currentFrame.transform as RectTransform;
-        if (rectTransform != null) {
-            rectTransform.localScale = Vector3.one;
-            rectTransform.rect.Set(0, 0, 0, 0);
-            rectTransform.offsetMin = Vector2.zero;
-            rectTransform.offsetMax = Vector2.zero;
-
-            //Debug.LogError(rectTransform);
-            //rectTransform.anchoredPosition = Vector2.zero;
+        private UIDefaultsDBEntry uiDefaults {
+            get {
+                if (_uiDefaults == null) {
+                    _uiDefaults = DB.Get<UIDefaultsDBEntry>();
+                }
+                return _uiDefaults;
+            }
         }
 
-        if (param != null && param.Length > 0) {
-            _currentFrame.SendMessage("OnShowParams", param, SendMessageOptions.DontRequireReceiver);
-        } else {
-            _currentFrame.SendMessage("OnShow", SendMessageOptions.DontRequireReceiver);
+        private UILayerBase defaultLayerSrc {
+            get {
+                if (_defaultLayerSrc == null) {
+                    _defaultLayerSrc = DB.Get<UIDefaultsDBEntry>().defaultLayer.LoadPrefab<UILayerBase>();
+                }
+                return defaultLayerSrc;
+            }
         }
-        
+
+        public void Show(UIFrameDBEntry newFrame) {
+            Show(newFrame, null);
+        }
+
+        public void Show(UIFrameDBEntry newFrame, params object[] args) {
+            var requiredLayer = GetOrCreateLayer(newFrame.layer);
+            requiredLayer.Show(newFrame);
+        }
+
+        private UILayerBase GetOrCreateLayer(UILayerDBEntry layerDBEntry) {
+            if (layerDBEntry == null) {
+                return GetOrCreateLayer(uiDefaults.mainLayer);
+            }
+            if (_layers.ContainsKey(layerDBEntry)) {
+                return _layers[layerDBEntry];
+            }
+            var existedButNotCached = GetComponentsInChildren<UILayerBase>().Where(l => l.layerDBEntry == layerDBEntry).First();
+            if (existedButNotCached != null) {
+                _layers.AddOrSet(layerDBEntry, existedButNotCached);
+                return existedButNotCached;
+            }
+            return CreateLayer(layerDBEntry);
+        }
+
+        private UILayerBase CreateLayer(UILayerDBEntry layerDBEntry) {
+            var layerPrefab = layerDBEntry.LoadPrefab<UILayerBase>();
+            if (layerPrefab == null) {
+                layerPrefab = defaultLayerSrc;
+            }
+            var layer = layerPrefab.Clone(transform);
+            layer.name = layerDBEntry.name;
+            layer.GetComponent<Canvas>().sortingOrder = layerDBEntry.sortOrder;
+            _layers.Add(layerDBEntry, layer);
+            transform.SetChildrenSiblingIndex(c => c.GetComponent<Canvas>().sortingOrder);
+            return layer;
+        }
     }
 }

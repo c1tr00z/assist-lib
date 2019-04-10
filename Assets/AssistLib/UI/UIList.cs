@@ -80,8 +80,6 @@ public class UIList : MonoBehaviour {
                 newPosition.y = i * _cellSize.y - (_listItems.Count * _cellSize.y * 1.0f / 2) + _cellSize.y * 1.0f / 2;
             }
 
-            Debug.Log(string.Format("{0}::{1}::{2}", newPosition, _cellSize, _listItems.Count));
-
             rectTransform.localPosition = new Vector3(newPosition.x, newPosition.y, 0);
         }
 

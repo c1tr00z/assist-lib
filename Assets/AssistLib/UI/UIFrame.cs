@@ -1,9 +1,18 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class UIFrame : MonoBehaviour {
+namespace c1tr00z.AssistLib.UI {
+    [RequireComponent(typeof(RectTransform))]
+    public class UIFrame : MonoBehaviour {
 
-    public void Exit() {
-        Application.Quit();
+        private RectTransform _rectTransform;
+
+        public RectTransform rectTransform {
+            get {
+                if (_rectTransform == null) {
+                    _rectTransform = GetComponent<RectTransform>();
+                }
+                return _rectTransform;
+            }
+        }
     }
 }

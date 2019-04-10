@@ -31,6 +31,11 @@ public class DB : DBEntry {
         return GetAll<T>().SelectNotNull().Where(item => item.name == name).First();
     }
 
+    public static T Get<T>() where T : DBEntry {
+        CheckItems();
+        return GetAll<T>().SelectNotNull().First();
+    }
+
     public static IEnumerable<T> GetAll<T>() where T : DBEntry {
         CheckItems();
         var items = new List<T>();

@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using c1tr00z.AssistLib.UI;
+using UnityEngine;
 
 public class AppSettings : DBEntry {
 
@@ -17,9 +17,9 @@ public class AppSettings : DBEntry {
         }
     }
 
-    [SerializeField] private UIFrameItem _startFrame;
+    [SerializeField] private UIFrameDBEntry _startFrame;
 
-    public UIFrameItem startFrame {
+    public UIFrameDBEntry startFrame {
         get {
             return _startFrame;
         }
