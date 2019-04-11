@@ -31,4 +31,8 @@ public static class JSONUtuls {
     public static Dictionary<string, object> GetChild(this Dictionary<string, object> json, string key) {
         return json.ContainsKey(key) ? (Dictionary<string, object>)json[key] : new Dictionary<string, object>();
     }
+
+    public static string GetString(this Dictionary<string, object> json, string key) {
+        return json.ContainsKey(key) ? json[key].ToString() : null;
+    }
 }

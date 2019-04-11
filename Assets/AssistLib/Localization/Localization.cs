@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace c1tr00z.AssistLib.Localization {
-    public class Localization {
+    public static class Localization {
 
         private const SystemLanguage _defaultSystemLanguage = SystemLanguage.English;
         private static SystemLanguage _currentSystemLanguage = Application.systemLanguage;
         private static LanguageItem _defaultLanguage;
         private static LanguageItem _currentLanguage;
+
+        private static string LOCALIZATION_SETTINGS_KEY = "Localization";
+        private static string LOCALIZATION_SAVED_LANGUAGE_KEY = "Localization";
 
         private static bool _inited = false;
 
@@ -23,13 +26,21 @@ namespace c1tr00z.AssistLib.Localization {
             if (!_inited) {
                 _defaultLanguage = DB.Get<LanguageItem>(_defaultSystemLanguage.ToString());
 
-                //if (string.IsNullOrEmpty(AssistLibEditorSettings.language)) {
-                //    ChangeLanguage(_currentSystemLanguage.ToString());
-                //} else {
-                //    ChangeLanguage(AssistLibEditorSettings.language);
-                //}
+                var localizationSettingsData = AssistLibEditorSettings.GetDataNode(LOCALIZATION_SETTINGS_KEY);
+                var savedLanguageString = localizationSettingsData.ContainsKey(LOCALIZATION_SAVED_LANGUAGE_KEY)
+                    ? localizationSettingsData.GetString(LOCALIZATION_SAVED_LANGUAGE_KEY)
+                    : null;
 
-                ChangeLanguage(_currentSystemLanguage.ToString());
+                if (string.IsNullOrEmpty(savedLanguageString)) {
+                    ChangeLanguage(_currentSystemLanguage.ToString());
+                } else {
+                    var savedLanguage = DB.Get<LanguageItem>(savedLanguageString);
+                    if (savedLanguage != null) {
+                        ChangeLanguage(savedLanguage);
+                    } else {
+                        Debug.LogWarning(string.Format("Language not found: {0}", savedLanguageString));
+                    }
+                }
 
                 _inited = true;
             }
@@ -57,11 +68,13 @@ namespace c1tr00z.AssistLib.Localization {
         }
 
         public static void ChangeLanguage(LanguageItem newLanguage) {
-            //if (string.IsNullOrEmpty(AssistLibEditorSettings.language)) {
-            //    AssistLibEditorSettings.language = _currentSystemLanguage.ToString();
-            //    AssistLibEditorSettings.Save();
-            //}
-            _currentLanguage = DB.GetAll<LanguageItem>().RandomItem();
+            if (_currentLanguage == newLanguage) {
+                return;
+            }
+            var localizationSettingsData = AssistLibEditorSettings.GetDataNode(LOCALIZATION_SETTINGS_KEY);
+            localizationSettingsData.AddOrSet(LOCALIZATION_SAVED_LANGUAGE_KEY, newLanguage.name);
+            AssistLibEditorSettings.SetDataNode(LOCALIZATION_SETTINGS_KEY, localizationSettingsData);
+            _currentLanguage = newLanguage;
 
             if (_inited) {
                 changeLanguage(newLanguage);
