@@ -15,7 +15,7 @@ namespace c1tr00z.AssistLib.EditorTools {
             var settingsHash = AssistLibEditorSettings.GetDataNode(_editorToolsSettingsKey);
 
             AppDomain.CurrentDomain.GetAssemblies().ForEach(assembly => {
-                assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(EditorTool))).ForEach(t => {
+                assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(EditorTool)) && !t.IsAbstract).ForEach(t => {
                     if (!tools.ContainsKey(t)) {
                         var tool = (EditorTool)Activator.CreateInstance(t);
                         tools.Add(t, tool);
