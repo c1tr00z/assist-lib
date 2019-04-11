@@ -3,58 +3,24 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public class ItemsEditor {
+public static class ItemsEditor {
 
     [MenuItem("Assets/Create item")]
     public static void CreateItem() {
-        DBEntry item = ScriptableObject.CreateInstance<DBEntry>();
 
         string path = AssetDatabase.GetAssetPath(Selection.activeObject);
+
         if (path == "") {
             path = "Assets";
         } else if (Path.GetExtension(path) != "") {
             path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
         }
 
-        string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(path + "/New " + typeof(DBEntry).ToString() + ".asset");
-
-        AssetDatabase.CreateAsset(item, assetPathAndName);
-
-        AssetDatabase.SaveAssets();
+        DBEntry item = AssetDBUtils.CreateScriptableObject<DBEntry>(path, "New DBEntry");
 
         CollectItems();
 
         Selection.activeObject = item;
-    }
-     
-    public static T CreateOrGetItem<T>(string path, string name) where T : DBEntry {
-
-        Debug.Log(name);
-
-        if (path == "") {
-            path = "Assets";
-        } else if (Path.GetExtension(path) != "") {
-            path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
-        }
-
-        var pathDir = new DirectoryInfo(Path.Combine(Application.dataPath, path.Replace("Assets\\", "").Replace("Assets/", "")));
-        Debug.Log(pathDir.ToString());
-        if (!pathDir.Exists) {
-            pathDir.Create();
-        }
-
-        var item = DB.Get<T>(name);
-        if (item == null) {
-            item = ScriptableObject.CreateInstance<T>();
-            
-            string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(path, name) + ".asset");
-
-            AssetDatabase.CreateAsset(item, assetPathAndName);
-
-            AssetDatabase.SaveAssets();
-        }
-
-        return item;
     }
 
     [MenuItem("Assist/Collect items")]
