@@ -26,7 +26,7 @@ namespace c1tr00z.AssistLib.Localization {
             if (!_inited) {
                 _defaultLanguage = DB.Get<LanguageItem>(_defaultSystemLanguage.ToString());
 
-                var localizationSettingsData = AssistLibEditorSettings.GetDataNode(LOCALIZATION_SETTINGS_KEY);
+                var localizationSettingsData = PlayerPrefsLocalData.GetDataNode(LOCALIZATION_SETTINGS_KEY);
                 var savedLanguageString = localizationSettingsData.ContainsKey(LOCALIZATION_SAVED_LANGUAGE_KEY)
                     ? localizationSettingsData.GetString(LOCALIZATION_SAVED_LANGUAGE_KEY)
                     : null;
@@ -71,9 +71,9 @@ namespace c1tr00z.AssistLib.Localization {
             if (_currentLanguage == newLanguage) {
                 return;
             }
-            var localizationSettingsData = AssistLibEditorSettings.GetDataNode(LOCALIZATION_SETTINGS_KEY);
+            var localizationSettingsData = PlayerPrefsLocalData.GetDataNode(LOCALIZATION_SETTINGS_KEY);
             localizationSettingsData.AddOrSet(LOCALIZATION_SAVED_LANGUAGE_KEY, newLanguage.name);
-            AssistLibEditorSettings.SetDataNode(LOCALIZATION_SETTINGS_KEY, localizationSettingsData);
+            PlayerPrefsLocalData.SetDataNode(LOCALIZATION_SETTINGS_KEY, localizationSettingsData);
             _currentLanguage = newLanguage;
 
             if (_inited) {
