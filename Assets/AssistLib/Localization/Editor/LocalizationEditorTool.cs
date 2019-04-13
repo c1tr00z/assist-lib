@@ -25,15 +25,7 @@ namespace c1tr00z.AssistLib.Localization {
             foreach (KeyValuePair<string, Dictionary<string, string>> kvp in localization) {
                 var lang = AssetDBUtils.CreateScriptableObject<LanguageItem>(PathUtils.Combine("Assets", "Localization", "Resources", "Languages"), kvp.Key);
                 var json = JSONUtuls.Serialize(kvp.Value).DecodeEncodedNonAscii();
-                var file = new FileInfo(PathUtils.Combine(Application.dataPath, "Localization", "Resources", "Languages", kvp.Key + "@text.txt"));
-                if (!file.Exists) {
-                    file.Create().Close();
-                }
-                Debug.Log(file.ToString());
-                using (StreamWriter sw = new StreamWriter(file.ToString())) {
-                    sw.Write(json);
-                    sw.Close();
-                }
+                FileUtils.SaveTextToFile(PathUtils.Combine(Application.dataPath, "Localization", "Resources", "Languages", kvp.Key + "@text.txt"), json);
             }
 
             Debug.Log(JSONUtuls.Serialize(localization).DecodeEncodedNonAscii());
