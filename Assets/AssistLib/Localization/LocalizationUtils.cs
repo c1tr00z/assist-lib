@@ -8,6 +8,10 @@
             return Localization.Translate(string.Format("{0}@{1}", dBEntry.name, key));
         }
 
+        public static string GetLocalizationText(this DBEntry dBEntry, string key, params object[] localizationParams) {
+            return string.Format(GetLocalizationText(dBEntry, key), localizationParams);
+        }
+
         public static string GetTitle(this DBEntry dBEntry) {
             return GetLocalizationText(dBEntry, KEY_TITLE);
         }
