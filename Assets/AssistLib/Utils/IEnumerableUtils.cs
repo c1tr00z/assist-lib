@@ -155,4 +155,23 @@ public static class IEnumerableUtils {
         Array.Copy(enumerable.ToArray(), index, result, 0, length);
         return result;
     }
+
+    public static IEnumerable<T> MaxElements<T>(this IEnumerable<T> enumerable, Func<T, float> selector) {
+        var maxElements = new List<T>();
+        enumerable.ForEach(e => {
+            if (maxElements.Count == 0) {
+                maxElements.Add(e);
+            } else if (selector(maxElements.First()) == selector(e)) {
+                maxElements.Add(e);
+            } else if (selector(maxElements.First()) < selector(e)) {
+                maxElements.Clear();
+                maxElements.Add(e);
+            }
+        });
+        return maxElements;
+    }
+
+    public static T MaxElement<T>(this IEnumerable<T> enumerable, Func<T, float> selector) {
+        return MaxElements(enumerable, selector).First();
+    }
 }
