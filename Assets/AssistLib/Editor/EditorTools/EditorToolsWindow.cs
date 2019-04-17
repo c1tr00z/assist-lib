@@ -16,11 +16,14 @@ namespace c1tr00z.AssistLib.EditorTools {
         }
 
         private void Load() {
+            var title = new GUIContent();
+            title.text = "Editor tools";
+            titleContent = title;
+
             _controller = new EditorToolsController();
         }
 
         void OnGUI() {
-            GUILayout.Label("Editor tools", EditorStyles.boldLabel);
 
             _controller.DrawTools();
 
