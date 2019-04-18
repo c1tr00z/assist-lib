@@ -23,7 +23,10 @@ namespace c1tr00z.AssistLib.Localization {
 
         private void StoreLocalization(Dictionary<string, Dictionary<string, string>> localization) {
             foreach (KeyValuePair<string, Dictionary<string, string>> kvp in localization) {
-                var lang = AssetDBUtils.CreateScriptableObject<LanguageItem>(PathUtils.Combine("Assets", "Localization", "Resources", "Languages"), kvp.Key);
+                var lang = DB.Get<LanguageItem>(kvp.Key);
+                if (lang == null) {
+                    lang = AssetDBUtils.CreateScriptableObject<LanguageItem>(PathUtils.Combine("Assets", "Localization", "Resources", "Languages"), kvp.Key);
+                }
                 var json = JSONUtuls.Serialize(kvp.Value).DecodeEncodedNonAscii();
                 FileUtils.SaveTextToFile(PathUtils.Combine(Application.dataPath, "Localization", "Resources", "Languages", kvp.Key + "@text.txt"), json);
             }

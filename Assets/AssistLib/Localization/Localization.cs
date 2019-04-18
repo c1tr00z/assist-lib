@@ -45,11 +45,13 @@ namespace c1tr00z.AssistLib.Localization {
                 _inited = true;
             }
 
-            if (_defaultLanguage != null && _defaultLanguage.translations != null && _defaultLanguage.translations.ContainsKey(key)) {
+            if (_defaultLanguage != null && _defaultLanguage.translations != null 
+                && _defaultLanguage.translations.ContainsKey(key) && !string.IsNullOrEmpty(_defaultLanguage.translations[key])) {
                 translation = _defaultLanguage.translations[key];
             }
 
-            if (_currentLanguage != null && _currentLanguage.translations != null && _currentLanguage.translations.ContainsKey(key)) {
+            if (_currentLanguage != null && _currentLanguage.translations != null 
+                && _currentLanguage.translations.ContainsKey(key) && !string.IsNullOrEmpty(_currentLanguage.translations[key])) {
                 translation = _currentLanguage.translations[key];
             }
 
