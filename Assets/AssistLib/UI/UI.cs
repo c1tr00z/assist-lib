@@ -25,7 +25,7 @@ namespace c1tr00z.AssistLib.UI {
                 if (_defaultLayerSrc == null) {
                     _defaultLayerSrc = DB.Get<UIDefaultsDBEntry>().defaultLayer.LoadPrefab<UILayerBase>();
                 }
-                return defaultLayerSrc;
+                return _defaultLayerSrc;
             }
         }
 
@@ -59,11 +59,28 @@ namespace c1tr00z.AssistLib.UI {
                 layerPrefab = defaultLayerSrc;
             }
             var layer = layerPrefab.Clone(transform);
-            layer.name = layerDBEntry.name;
-            layer.GetComponent<Canvas>().sortingOrder = layerDBEntry.sortOrder;
+            layer.Init(layerDBEntry);
             _layers.Add(layerDBEntry, layer);
             transform.SetChildrenSiblingIndex(c => c.GetComponent<Canvas>().sortingOrder);
             return layer;
+        }
+
+        public IEnumerable<UILayerBase> GetLayersOnTop(UILayerBase layer, bool include) {
+            var layersList = new List<UILayerBase>();
+            if (include) {
+                layersList.Add(layer);
+            }
+            layersList.AddRange(_layers.Values.Where(l => l.canvas.sortingOrder >= layer.canvas.sortingOrder && l != layer && l.usedByHotkeys));
+            return layersList;
+        }
+
+        public bool IsTopFrameInStack(UIFrame frame) {
+            var layers = GetLayersOnTop(frame.layer, false);
+            return layers.Where(l => l.currentFrames.Count > 0).Count() == 0;
+        }
+        
+        public void CloseAllFrames() {
+            _layers.Values.ForEach(l => l.CloseAll());
         }
     }
 }

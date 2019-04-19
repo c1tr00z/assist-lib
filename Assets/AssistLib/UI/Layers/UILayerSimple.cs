@@ -3,16 +3,20 @@
 namespace c1tr00z.AssistLib.UI {
     public class UILayerSimple : UILayerBase {
 
-        public List<UIFrame> currentFrames { get; private set; }
+        private List<UIFrame> _currentFrames = new List<UIFrame>();
+
+        public override List<UIFrame> currentFrames {
+            get { return _currentFrames; }
+        }
 
         public override void Close(UIFrameDBEntry frameDBEntry) {
             var frames = currentFrames.Where(f => f.GetComponent<DBEntryResource>().parent == frameDBEntry).ToList();
-            currentFrames.RemoveAll(f => frames.Contains(f));
-            frames.ForEach(f => Destroy(f));
+            _currentFrames.RemoveAll(f => frames.Contains(f));
+            frames.ForEach(f => Destroy(f.gameObject));
         }
 
         public override void Show(UIFrameDBEntry frameDBEntry, params object[] args) {
-            currentFrames.Add(ShowFrame(frameDBEntry, args));
+            _currentFrames.Add(ShowFrame(frameDBEntry, args));
         }
     }
 }

@@ -6,6 +6,8 @@ namespace c1tr00z.AssistLib.UI {
 
         private RectTransform _rectTransform;
 
+        public UILayerBase layer { get; private set; }
+
         public RectTransform rectTransform {
             get {
                 if (_rectTransform == null) {
@@ -13,6 +15,18 @@ namespace c1tr00z.AssistLib.UI {
                 }
                 return _rectTransform;
             }
+        }
+
+        public bool isTopFrame {
+            get { return UI.instance.IsTopFrameInStack(this); }
+        }
+
+        public void Show(UILayerBase layer) {
+            this.layer = layer;
+        }
+
+        public void Close() {
+            layer.Close(GetComponent<DBEntryResource>().parent as UIFrameDBEntry);
         }
     }
 }

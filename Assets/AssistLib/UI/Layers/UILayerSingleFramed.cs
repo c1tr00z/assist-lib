@@ -9,10 +9,22 @@ namespace c1tr00z.AssistLib.UI {
 
         private UIFrameDBEntry _currentFrameDBEntry;
 
+        public override List<UIFrame> currentFrames {
+            get {
+                return new List<UIFrame> { _currentFrame };
+            }
+        }
+
         public override void Close(UIFrameDBEntry frameDBEntry) {
             if (_currentFrameDBEntry == frameDBEntry) {
-                Destroy(_currentFrame);
+                Destroy(_currentFrame.gameObject);
                 _currentFrameDBEntry = null;
+            }
+        }
+
+        private void Close(UIFrame frame) {
+            if (frame == _currentFrame) {
+                Close(_currentFrameDBEntry);
             }
         }
 
@@ -23,7 +35,9 @@ namespace c1tr00z.AssistLib.UI {
             var prevFrame = _currentFrame;
             _currentFrameDBEntry = frame;
             _currentFrame = ShowFrame(frame, args);
-            Destroy(prevFrame);
+            if (prevFrame != null) {
+                Destroy(prevFrame.gameObject);
+            }
         }
     }
 }

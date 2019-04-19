@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace c1tr00z.AssistLib.UI {
@@ -8,6 +9,7 @@ namespace c1tr00z.AssistLib.UI {
     public abstract class UILayerBase : MonoBehaviour {
 
         private RectTransform _rectTransform;
+        private Canvas _canvas;
 
         [SerializeField]
         private UILayerDBEntry _layerDBEntry;
@@ -21,14 +23,36 @@ namespace c1tr00z.AssistLib.UI {
             }
         }
 
+        public Canvas canvas {
+            get {
+                if (_canvas == null) {
+                    _canvas = GetComponent<Canvas>();
+                }
+                return _canvas;
+            }
+        }
+
         public UILayerDBEntry layerDBEntry {
             get { return _layerDBEntry; }
         }
+
+        public bool usedByHotkeys {
+            get { return layerDBEntry.usedByHotkeys; }
+        }
+
+        public void Init(UILayerDBEntry layerDBEntry) {
+            _layerDBEntry = layerDBEntry;
+            name = layerDBEntry.name;
+            canvas.sortingOrder = layerDBEntry.sortOrder;
+        }
+
+        public abstract List<UIFrame> currentFrames { get; }
 
         public abstract void Show(UIFrameDBEntry frame, params object[] args);
 
         protected UIFrame ShowFrame(UIFrameDBEntry frameItem, params object[] args) {
             var frame = frameItem.LoadFrame().Clone(rectTransform);
+            frame.Show(this);
             Stretch(frame.rectTransform);
 
             if (args != null && args.Length > 0) {
@@ -40,6 +64,10 @@ namespace c1tr00z.AssistLib.UI {
         }
 
         public abstract void Close(UIFrameDBEntry frameDBEntry);
+
+        public void CloseAll() {
+            currentFrames.ForEach(f => Close(f.GetComponent<DBEntryResource>().parent as UIFrameDBEntry));
+        }
 
         protected void Stretch(RectTransform rectTransform) {
             rectTransform.localScale = Vector3.one;
