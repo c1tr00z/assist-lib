@@ -54,6 +54,13 @@ public static class IEnumerableUtils {
         return default(T);
     }
 
+    public static T Last<T>(this IEnumerable<T> enumerable) {
+        if (enumerable.Count() == 0) {
+            return default(T);
+        }
+        return enumerable.ToList()[0];
+    }
+
     public static IEnumerable<T> Where<T>(this IEnumerable<T> enumerable, System.Func<T, bool> selector) {
         return Enumerable.Where(enumerable, selector);
     }
@@ -173,5 +180,20 @@ public static class IEnumerableUtils {
 
     public static T MaxElement<T>(this IEnumerable<T> enumerable, Func<T, float> selector) {
         return MaxElements(enumerable, selector).First();
+    }
+
+    public static void Sort<T>(this List<T> list, Func<T, float> comparer) {
+        Sort(list, comparer, false);
+    }
+    public static void Sort<T>(this List<T> list, Func<T, float> comparer, bool invert) {
+        list.Sort((e1, e2) => {
+            if (comparer(e1) > comparer(e2)) {
+                return !invert ? 1 : -1;
+            } else if (comparer(e1) < comparer(e2)) {
+                return !invert ? -1 : 1;
+            } else {
+                return 0;
+            }
+        });
     }
 }
