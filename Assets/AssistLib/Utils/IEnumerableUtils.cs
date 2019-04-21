@@ -58,7 +58,7 @@ public static class IEnumerableUtils {
         if (enumerable.Count() == 0) {
             return default(T);
         }
-        return enumerable.ToList()[0];
+        return enumerable.ToList()[enumerable.Count() - 1];
     }
 
     public static IEnumerable<T> Where<T>(this IEnumerable<T> enumerable, System.Func<T, bool> selector) {
