@@ -8,7 +8,7 @@ namespace c1tr00z.AssistLib.Localization {
         private const SystemLanguage _defaultSystemLanguage = SystemLanguage.English;
         private static SystemLanguage _currentSystemLanguage = Application.systemLanguage;
         private static LanguageItem _defaultLanguage;
-        private static LanguageItem _currentLanguage;
+        public static LanguageItem currentLanguage { get; private set; }
 
         private static string LOCALIZATION_SETTINGS_KEY = "Localization";
         private static string LOCALIZATION_SAVED_LANGUAGE_KEY = "Localization";
@@ -50,9 +50,9 @@ namespace c1tr00z.AssistLib.Localization {
                 translation = _defaultLanguage.translations[key];
             }
 
-            if (_currentLanguage != null && _currentLanguage.translations != null 
-                && _currentLanguage.translations.ContainsKey(key) && !string.IsNullOrEmpty(_currentLanguage.translations[key])) {
-                translation = _currentLanguage.translations[key];
+            if (currentLanguage != null && currentLanguage.translations != null 
+                && currentLanguage.translations.ContainsKey(key) && !string.IsNullOrEmpty(currentLanguage.translations[key])) {
+                translation = currentLanguage.translations[key];
             }
 
             return translation;
@@ -70,13 +70,13 @@ namespace c1tr00z.AssistLib.Localization {
         }
 
         public static void ChangeLanguage(LanguageItem newLanguage) {
-            if (_currentLanguage == newLanguage) {
+            if (currentLanguage == newLanguage) {
                 return;
             }
             var localizationSettingsData = PlayerPrefsLocalData.GetDataNode(LOCALIZATION_SETTINGS_KEY);
             localizationSettingsData.AddOrSet(LOCALIZATION_SAVED_LANGUAGE_KEY, newLanguage.name);
             PlayerPrefsLocalData.SetDataNode(LOCALIZATION_SETTINGS_KEY, localizationSettingsData);
-            _currentLanguage = newLanguage;
+            currentLanguage = newLanguage;
 
             if (_inited) {
                 changeLanguage(newLanguage);
