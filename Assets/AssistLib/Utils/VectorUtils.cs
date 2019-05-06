@@ -28,4 +28,12 @@ public static class VectorUtils {
     public static Vector4 ToVector4(this Vector2 v) {
         return new Vector4(v.x, v.y, 0, 0);
     }
+
+    public static Vector3 RandomV3(float minValue, float maxValue) {
+        return new Vector3(Random.Range(minValue, maxValue), Random.Range(minValue, maxValue), Random.Range(minValue, maxValue));
+    }
+
+    public static Vector3 RandomV3(int minValue, int maxValue) {
+        return new Vector3(Random.Range(minValue, maxValue), Random.Range(minValue, maxValue), Random.Range(minValue, maxValue));
+    }
 }

@@ -6,10 +6,8 @@ using System.Text;
 
 public abstract class ToFile : SaveMethod {
 
-    [SerializeField]
-    protected string savedGamesPath;
-    [SerializeField]
-    protected string savedGamesFileExtension;
+    public string savedGamesPath;
+    public string savedGamesFileExtension;
 
     public string savesPath {
         get {
@@ -72,10 +70,6 @@ public abstract class ToFile : SaveMethod {
         get {
             var dir = new DirectoryInfo(Path.Combine(Application.persistentDataPath, savedGamesPath));
             if (!dir.Exists) {
-                //dir.Create(new System.Security.AccessControl.DirectorySecurity
-                //    (dir.FullName, System.Security.AccessControl.AccessControlSections.Owner));
-                //dir.Create(new System.Security.AccessControl.DirectorySecurity
-                //    (dir.FullName, System.Security.AccessControl.AccessControlSections.All));
                 Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, savedGamesPath));
             }
             return dir;

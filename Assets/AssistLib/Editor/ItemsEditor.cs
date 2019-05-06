@@ -23,6 +23,32 @@ public static class ItemsEditor {
         Selection.activeObject = item;
     }
 
+    [MenuItem("Assist/Create DB")]
+    public static void CreateDB() {
+        if (DB.Get<DB>() != null) {
+            return;
+        }
+
+        PathUtils.CreatePath("Resources");  
+        AssetDBUtils.CreateScriptableObject<DB>(PathUtils.Combine("Assets", "Resources"), "DB");
+        CollectItems();
+    }
+
+    [MenuItem("Assist/Create AppSettings")]
+    public static void CreateAppSettings() {
+        if (DB.Get<DB>() == null) {
+            return;
+        }
+
+        if (DB.Get<AppSettings>() != null) {
+            return;
+        }
+
+        PathUtils.CreatePath("AssistLib", "Resources");
+        AssetDBUtils.CreateScriptableObject<AppSettings>(PathUtils.Combine("Assets", "AssistLib", "Resources"), "AppSettings");
+        CollectItems();
+    }
+
     [MenuItem("Assist/Collect items")]
     public static void CollectItems() {
         var itemsObject = Resources.Load<DB>("DB");
@@ -39,6 +65,17 @@ public static class ItemsEditor {
             var itemPrefab = i.LoadPrefab<GameObject>();
             if (itemPrefab != null) {
 
+#if UNITY_2018_3_OR_NEWER
+                var path = AssetDatabase.GetAssetPath(itemPrefab);
+                var prefabGO = PrefabUtility.LoadPrefabContents(path);
+                var itemResource = prefabGO.GetComponent<DBEntryResource>();
+                if (itemResource == null) {
+                    itemResource = prefabGO.AddComponent(typeof(DBEntryResource)) as DBEntryResource;
+                }
+                itemResource.SetParent(i, "Prefab");
+                PrefabUtility.SaveAsPrefabAsset(prefabGO, path);
+                EditorUtility.SetDirty(itemPrefab);
+#else
                 var itemResource = itemPrefab.GetComponent<DBEntryResource>();
                 if (itemResource == null) {
                     itemResource = itemPrefab.AddComponent(typeof(DBEntryResource)) as DBEntryResource;
@@ -46,6 +83,7 @@ public static class ItemsEditor {
 
                 itemResource.SetParent(i, "Prefab");
                 EditorUtility.SetDirty(itemPrefab);
+#endif
             }
 
         }

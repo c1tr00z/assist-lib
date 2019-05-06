@@ -13,6 +13,9 @@ public class DB : DBEntry {
         if (_instance == null) {
             _instance = Resources.Load<DB>("DB");
         }
+        if (_instance == null) {
+            return;
+        }
         if (_instance._items == null) {
             _instance._items = new Dictionary<DBEntry, string>();
         } else {

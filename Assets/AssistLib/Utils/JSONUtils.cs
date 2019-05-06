@@ -35,4 +35,31 @@ public static class JSONUtuls {
     public static string GetString(this Dictionary<string, object> json, string key) {
         return json.ContainsKey(key) ? json[key].ToString() : null;
     }
+
+    public static int GetInt(this Dictionary<string, object> json, string key) {
+        var stringValue = json.GetString(key);
+        int value = 0;
+        if (!string.IsNullOrEmpty(stringValue) && int.TryParse(stringValue, out value)) {
+            return value;
+        }
+        return 0;
+    }
+
+    public static float GetFloat(this Dictionary<string, object> json, string key) {
+        var stringValue = json.GetString(key);
+        float value = 0;
+        if (!string.IsNullOrEmpty(stringValue) && float.TryParse(stringValue, out value)) {
+            return value;
+        }
+        return 0f;
+    }
+
+    public static bool GetBool(this Dictionary<string, object> json, string key, bool defaultValue = false) {
+        var stringValue = json.GetString(key);
+        bool value = false;
+        if (!string.IsNullOrEmpty(stringValue) && bool.TryParse(stringValue, out value)) {
+            return value;
+        }
+        return defaultValue;
+    }
 }

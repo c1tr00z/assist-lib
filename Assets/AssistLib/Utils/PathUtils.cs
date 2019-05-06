@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 public static class PathUtils {
-    
+
     public static string Combine(params string[] paths) {
         if (paths == null || paths.Length == 0) {
             return "";
@@ -19,5 +22,24 @@ public static class PathUtils {
             }
             return path;
         }
+    }
+
+
+    public static void CreatePath(params string[] paths) {
+        if (paths == null || paths.Length == 0) {
+            return;
+        }
+
+        for (var i = 0; i < paths.Length; i++) {
+            var newPath = Combine(paths.SubArray(0, i + 1).ToArray());
+            var newDir = new DirectoryInfo(Combine(Application.dataPath, newPath));
+            if (!newDir.Exists) {
+                newDir.Create();
+            }
+        }
+
+#if UNITY_EDITOR
+        AssetDatabase.Refresh();
+#endif
     }
 }

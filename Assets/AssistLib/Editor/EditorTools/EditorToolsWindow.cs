@@ -25,6 +25,11 @@ namespace c1tr00z.AssistLib.EditorTools {
 
         void OnGUI() {
 
+            if (_controller == null) {
+                Load();
+                return;
+            }
+
             _controller.DrawTools();
 
             if (GUI.changed) {

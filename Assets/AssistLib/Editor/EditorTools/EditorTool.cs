@@ -5,9 +5,15 @@ using UnityEngine;
 namespace c1tr00z.AssistLib.EditorTools {
     public class EditorTool {
 
+        private bool _toggle = false;
+
+        private string _toolLabel = "Empty...";
+
         public void Draw() {
-            DrawTitle();
-            DrawInterface();
+            if (DrawTitle()) {
+                GUILayout.Label(_toolLabel, EditorStyles.boldLabel);
+                DrawInterface();
+            }
         }
 
         public virtual void Init(Dictionary<string, object> settings) {
@@ -22,10 +28,11 @@ namespace c1tr00z.AssistLib.EditorTools {
             EditorGUILayout.LabelField("Nothing here...");
         }
 
-        private void DrawTitle() {
+        private bool DrawTitle() {
             var editorToolName = (EditorToolName)System.Attribute.GetCustomAttribute(GetType(), typeof(EditorToolName));
-            var toolLabel = editorToolName != null ? editorToolName.toolName : GetType().ToString();
-            GUILayout.Label(toolLabel, EditorStyles.boldLabel);
+            _toolLabel = editorToolName != null ? editorToolName.toolName : GetType().ToString();
+            _toggle = EditorGUILayout.Foldout(_toggle, _toolLabel);
+            return _toggle;
         }
 
         protected bool Button(string caption, params GUILayoutOption[] options) {
