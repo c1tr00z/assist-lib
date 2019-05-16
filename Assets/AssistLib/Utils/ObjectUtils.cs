@@ -3,17 +3,20 @@ using System.Collections;
 
 public static class ObjectUtils {
 
-    public static T Clone<T>(this T obj) where T : Object {
-        return Object.Instantiate(obj, Vector3.zero, Quaternion.identity) as T;
+    public static T Clone<T>(this T original, Vector3 position, Quaternion rotation, Transform parent) where T : Object {
+        return Object.Instantiate(original, position, rotation, parent) as T;
     }
 
-    public static T Clone<T>(this T obj, Transform parent) where T : Component {
-        var clone = obj.Clone<T>();
-        clone.transform.parent = parent;
+    public static T Clone<T>(this T obj) where T : Object {
+        return Clone(obj, null);
+    }
 
-        clone.Reset();
+    public static T Clone<T>(this T obj, Transform parent) where T : Object {
+        return Clone(obj, Vector3.zero, Quaternion.identity, parent);
+    }
 
-        return clone;
+    public static T Clone<T>(this T obj, Vector3 position, Transform parent) where T : Object {
+        return Clone(obj, position, Quaternion.identity, parent);
     }
 
     public static void Reset<T>(this T obj) where T : Component {
