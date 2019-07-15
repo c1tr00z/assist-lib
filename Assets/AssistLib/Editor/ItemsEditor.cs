@@ -5,8 +5,8 @@ using UnityEngine;
 
 public static class ItemsEditor {
 
-    [MenuItem("Assets/Create item")]
-    public static void CreateItem() {
+    [MenuItem("Assets/Create DBEntry")]
+    public static void CreateDBEntry() {
 
         string path = AssetDatabase.GetAssetPath(Selection.activeObject);
 
@@ -17,6 +17,22 @@ public static class ItemsEditor {
         }
 
         DBEntry item = AssetDBUtils.CreateScriptableObject<DBEntry>(path, "New DBEntry");
+
+        CollectItems();
+
+        Selection.activeObject = item;
+    }
+
+    public static void CreateItem<T>() where T: ScriptableObject {
+        string path = AssetDatabase.GetAssetPath(Selection.activeObject);
+
+        if (path == "") {
+            path = "Assets";
+        } else if (Path.GetExtension(path) != "") {
+            path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
+        }
+
+        var item = AssetDBUtils.CreateScriptableObject<T>(path, string.Format("New {0}", typeof(T).Name));
 
         CollectItems();
 
