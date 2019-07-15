@@ -5,9 +5,8 @@ using System.Linq;
 using System;
 
 public static class IEnumerableUtils {
-    
-    public static T RandomItem<T>(this IEnumerable<T> items) {
 
+    public static T RandomItem<T>(this IEnumerable<T> items) {
         T[] array;
         if (items is T[]) {
             array = items as T[];
@@ -17,6 +16,9 @@ public static class IEnumerableUtils {
             array = list.ToArray();
         }
         var randomized = UnityEngine.Random.Range(0, array.Length - 1);
+        if (randomized < 0 || array.Length <= randomized) {
+            return default(T);
+        }
         return array[randomized];
     }
 
@@ -180,6 +182,25 @@ public static class IEnumerableUtils {
 
     public static T MaxElement<T>(this IEnumerable<T> enumerable, Func<T, float> selector) {
         return MaxElements(enumerable, selector).First();
+    }
+
+    public static IEnumerable<T> MinElements<T>(this IEnumerable<T> enumerable, Func<T, float> selector) {
+        var minElements = new List<T>();
+        enumerable.ForEach(e => {
+            if (minElements.Count == 0) {
+                minElements.Add(e);
+            } else if (selector(minElements.First()) == selector(e)) {
+                minElements.Add(e);
+            } else if (selector(minElements.First()) > selector(e)) {
+                minElements.Clear();
+                minElements.Add(e);
+            }
+        });
+        return minElements;
+    }
+
+    public static T MinElement<T>(this IEnumerable<T> enumerable, Func<T, float> selector) {
+        return MinElements(enumerable, selector).First();
     }
 
     public static void Sort<T>(this List<T> list, Func<T, float> comparer) {
