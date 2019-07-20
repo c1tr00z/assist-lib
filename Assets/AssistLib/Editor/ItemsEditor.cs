@@ -5,9 +5,7 @@ using UnityEngine;
 
 public static class ItemsEditor {
 
-    [MenuItem("Assets/Create DBEntry")]
-    public static void CreateDBEntry() {
-
+    public static string GetSelectedPath() {
         string path = AssetDatabase.GetAssetPath(Selection.activeObject);
 
         if (path == "") {
@@ -16,23 +14,22 @@ public static class ItemsEditor {
             path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
         }
 
-        DBEntry item = AssetDBUtils.CreateScriptableObject<DBEntry>(path, "New DBEntry");
+        return path;
+    }
 
-        CollectItems();
-
-        Selection.activeObject = item;
+    [MenuItem("Assets/Create DBEntry")]
+    public static void CreateDBEntry() {
+        CreateItem<DBEntry>("New DBEntry");
     }
 
     public static void CreateItem<T>() where T: ScriptableObject {
-        string path = AssetDatabase.GetAssetPath(Selection.activeObject);
+        CreateItem<T>(string.Format("New {0}", typeof(T).Name));
+    }
 
-        if (path == "") {
-            path = "Assets";
-        } else if (Path.GetExtension(path) != "") {
-            path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
-        }
+    public static void CreateItem<T>(string name) where T : ScriptableObject {
+        var path = GetSelectedPath();
 
-        var item = AssetDBUtils.CreateScriptableObject<T>(path, string.Format("New {0}", typeof(T).Name));
+        var item = AssetDBUtils.CreateScriptableObject<T>(path, name);
 
         CollectItems();
 
