@@ -1,5 +1,7 @@
 ﻿using MiniJSON;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public static class JSONUtuls {
 
@@ -8,7 +10,15 @@ public static class JSONUtuls {
     }
 
     public static Dictionary<string, object> Deserialize(string jsonString) {
-        return (Dictionary<string, object>)Json.Deserialize(jsonString);
+        var deserialized = Json.Deserialize(jsonString);
+
+        if (deserialized == null) {
+            Debug.LogError("JSON string is corrupted!");
+            Debug.LogError("Corrupted json: " + jsonString);
+            return new Dictionary<string, object>();
+        }
+
+        return (Dictionary<string, object>)deserialized;
     }
 
     public static T Get<T>(this Dictionary<string, object> json, string key) {
@@ -61,5 +71,23 @@ public static class JSONUtuls {
             return value;
         }
         return defaultValue;
+    }
+
+    public static Vector2 GetVector2(this Dictionary<string, object> json, string key) {
+        var stringValue = json.GetString(key);
+        Vector2 value;
+        if (VectorUtils.TryParse(stringValue, out value)) {
+            return value;
+        }
+        return Vector2.zero;
+    }
+
+    public static Vector3 GetVector3(this Dictionary<string, object> json, string key) {
+        var stringValue = json.GetString(key);
+        Vector3 value;
+        if (VectorUtils.TryParse(stringValue, out value)) {
+            return value;
+        }
+        return Vector3.zero;
     }
 }

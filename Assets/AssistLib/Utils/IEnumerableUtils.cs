@@ -34,6 +34,15 @@ public static class IEnumerableUtils {
         }
     }
 
+    public static void AddOrSetRange<T, P>(this Dictionary<T, P> dic, Dictionary<T, P> other) {
+        if (other == null) {
+            throw new InvalidOperationException("`Other' param cant be null");
+        }
+        other.ForEach(kvp => {
+            dic.AddOrSet(kvp.Key, kvp.Value);
+        });
+    }
+
     public static bool ContainsItem<T>(this IEnumerable<T> enumerable, T item) {
         foreach (T i in enumerable) {
             if (i.Equals(item)) {

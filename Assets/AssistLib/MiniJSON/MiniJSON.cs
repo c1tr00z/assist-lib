@@ -520,18 +520,20 @@ namespace MiniJSON {
             }
 
             void SerializeOther(object value) {
-                if (value is float
-                    || value is int
-                    || value is uint
-                    || value is long
-                    || value is double
-                    || value is sbyte
-                    || value is byte
-                    || value is short
-                    || value is ushort
-                    || value is ulong
-                    || value is decimal) {
+                if (value is int
+                || value is uint
+                || value is long
+                || value is sbyte
+                || value is byte
+                || value is short
+                || value is ushort
+                || value is ulong) {
                     builder.Append(value.ToString());
+                } else if (value is float) {
+                    builder.Append(((float)value).ToString("{0:0.000000000}"));
+                } else if (value is double
+                  || value is decimal) {
+                    builder.Append(string.Format("{0:F}", value));
                 } else {
                     SerializeString(value.ToString());
                 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AssistLibEditorSettings {
 
-    private static Dictionary<string, object> _editorSettingsData;
+    private static Dictionary<string, object> _editorSettingsData = new Dictionary<string, object>();
 
     public static string editorSettingsKey {
         get {
@@ -13,12 +13,15 @@ public class AssistLibEditorSettings {
     }
 
     private static void CheckLoading() {
-        if (_editorSettingsData == null) {
+        if (_editorSettingsData == null || _editorSettingsData.Count == 0) {
             var settingsJson = EditorPrefs.GetString(editorSettingsKey);
             if (string.IsNullOrEmpty(settingsJson)) {
                 _editorSettingsData = new Dictionary<string, object>();
             } else {
-                _editorSettingsData = JSONUtuls.Deserialize(settingsJson);
+                var deserialized = JSONUtuls.Deserialize(settingsJson);
+                if (deserialized != null) {
+                    _editorSettingsData.AddOrSetRange(deserialized);
+                }
             }
         }
     }
