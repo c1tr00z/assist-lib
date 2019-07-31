@@ -31,6 +31,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEngine;
 
 namespace MiniJSON {
     // Example usage:
@@ -286,15 +287,14 @@ namespace MiniJSON {
 
             object ParseNumber() {
                 string number = NextWord;
-
                 if (number.IndexOf('.') == -1) {
                     long parsedInt;
                     Int64.TryParse(number, out parsedInt);
                     return parsedInt;
                 }
-
                 double parsedDouble;
-                Double.TryParse(number, out parsedDouble);
+                //use invariant number format to parse double
+                Double.TryParse(number, System.Globalization.NumberStyles.Float, System.Globalization.NumberFormatInfo.InvariantInfo, out parsedDouble);
                 return parsedDouble;
             }
 
@@ -530,10 +530,17 @@ namespace MiniJSON {
                 || value is ulong) {
                     builder.Append(value.ToString());
                 } else if (value is float) {
-                    builder.Append(((float)value).ToString("{0:0.000000000}"));
+                    //builder.Append(((float)value).ToString();
+                    builder.Append(((float)value).ToInvariantCultureString());
                 } else if (value is double
                   || value is decimal) {
                     builder.Append(string.Format("{0:F}", value));
+                } else if (value is Vector2) {
+                    builder.Append(((Vector2)value).ToInvariantCultureString());
+                } else if (value is Vector3) {
+                    builder.Append(((Vector3)value).ToInvariantCultureString());
+                } else if (value is Vector4) {
+                    builder.Append(((Vector4)value).ToInvariantCultureString());
                 } else {
                     SerializeString(value.ToString());
                 }

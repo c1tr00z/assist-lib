@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Globalization;
+using UnityEngine;
 
 public static class VectorUtils {
     
@@ -35,7 +36,7 @@ public static class VectorUtils {
     }
 
     public static Vector3 RandomV3(Vector3 minValue, Vector3 maxValue) {
-        return new Vector3(Random.Range(minValue.x, maxValue.x), Random.Range(minValue.x, maxValue.x), Random.Range(minValue.x, maxValue.x));
+        return new Vector3(Random.Range(minValue.x, maxValue.x), Random.Range(minValue.y, maxValue.y), Random.Range(minValue.z, maxValue.z));
     }
 
     /* 
@@ -55,41 +56,84 @@ public static class VectorUtils {
         return vectorString.Split(',');
     }
 
-    public static bool TryParse(string vectorString, out Vector3 result) {
-        result = Vector3.zero;
+    public static bool TryParse(string vectorString, out Vector4 result) {
+        result = Vector4.zero;
         var sArray = SplitVectorString(vectorString);
 
         if (sArray.Length < 2) {
             return false;
         }
 
-        var resultArray = new float[3];
+        var resultArray = new float[4];
 
-        for (var i = 0; i < 3; i++) {
-            if (i < sArray.Length) {
+        for (var i = 0; i < 4; i++) {
+            if (i >= sArray.Length) {
                 break;
             }
             float floatValue;
-            if (float.TryParse(sArray[i], out floatValue)) {
+            if (float.TryParse(sArray[i], NumberStyles.Float, NumberFormatInfo.InvariantInfo, out floatValue)) {
                 resultArray[i] = floatValue;
             } else {
                 return false;
             }
         }
 
-        // store as a Vector3
-        result = new Vector3(resultArray[0], resultArray[1], resultArray[2]);
+        // store as a Vector4
+        result = new Vector4(resultArray[0], resultArray[1], resultArray[2], resultArray[3]);
 
         return true;
     }
 
-    public static bool TryParse(string vectorString, out Vector2 result) {
-        result = Vector2.zero;
-        Vector3 vector3;
-        if (TryParse(vectorString, out vector3)) {
-            result = vector3.ToVector2();
+    public static bool TryParse(string vectorString, out Vector3 result) {
+        result = Vector3.zero;
+        Vector4 vector4;
+        if (TryParse(vectorString, out vector4)) {
+            result = vector4.ToVector3();
             return true;
         }
         return false;
+    }
+
+    public static bool TryParse(string vectorString, out Vector2 result) {
+        result = Vector2.zero;
+        Vector4 vector4;
+        if (TryParse(vectorString, out vector4)) {
+            result = vector4.ToVector2();
+            return true;
+        }
+        return false;
+    }
+
+    public static string ToString(this Vector4 vector, string format, CultureInfo cultureInfo) {
+        return string.Format("\"({0}, {1}, {2}, {3})\"",
+            vector.x.ToString(format, cultureInfo),
+            vector.y.ToString(format, cultureInfo),
+            vector.z.ToString(format, cultureInfo),
+            vector.w.ToString(format, cultureInfo));
+    }
+
+    public static string ToString(this Vector3 vector, string format, CultureInfo cultureInfo) {
+        return string.Format("\"({0}, {1}, {2})\"",
+            vector.x.ToString(format, cultureInfo),
+            vector.y.ToString(format, cultureInfo),
+            vector.z.ToString(format, cultureInfo));
+    }
+
+    public static string ToString(this Vector2 vector, string format, CultureInfo cultureInfo) {
+        return string.Format("\"({0}, {1})\"",
+            vector.x.ToString(format, cultureInfo),
+            vector.y.ToString(format, cultureInfo));
+    }
+
+    public static string ToInvariantCultureString(this Vector2 vector) {
+        return vector.ToString("G", CultureInfo.InvariantCulture);
+    }
+
+    public static string ToInvariantCultureString(this Vector3 vector) {
+        return vector.ToString("G", CultureInfo.InvariantCulture);
+    }
+
+    public static string ToInvariantCultureString(this Vector4 vector) {
+        return vector.ToString("G", CultureInfo.InvariantCulture);
     }
 }

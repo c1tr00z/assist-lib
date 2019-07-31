@@ -226,4 +226,12 @@ public static class IEnumerableUtils {
             }
         });
     }
+
+    public static void RemoveRange<T>(this List<T> list, IEnumerable<T> range) {
+        range.ForEach(item => {
+            if (list.Contains(item)) {
+                list.Remove(item);
+            }
+        });
+    }
 }
