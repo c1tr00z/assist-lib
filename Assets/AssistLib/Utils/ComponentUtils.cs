@@ -12,4 +12,24 @@ public static class ComponentUtils {
         return false;
     }
 
+    public static T GetCachedComponent<T>(this Component comp, ref T cachedComponent) {
+        if (cachedComponent == null) {
+            cachedComponent = comp.GetComponent<T>();
+        }
+        return cachedComponent;
+    }
+
+    public static T GetCachedComponentInParent<T>(this Component comp, ref T cachedComponent) {
+        if (cachedComponent == null) {
+            cachedComponent = comp.GetComponentInParent<T>();
+        }
+        return cachedComponent;
+    }
+
+    public static T GetCachedComponentInChildren<T>(this Component comp, ref T cachedComponent) {
+        if (cachedComponent == null) {
+            cachedComponent = comp.GetComponentInChildren<T>();
+        }
+        return cachedComponent;
+    }
 }
