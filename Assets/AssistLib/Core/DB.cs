@@ -19,14 +19,16 @@ public class DB : DBEntry {
         if (_instance._items == null) {
             _instance._items = new Dictionary<DBEntry, string>();
         } else {
-            _instance._items.Clear();
+            //_instance._items.Clear();
         }
-        _instance.paths.SelectNotNull().ForEach(path => {
-            var dbItem = Resources.Load<DBEntry>(path);
-            if (dbItem != null) {
-                _instance._items.Add(dbItem, path);
-            }
-        });
+        if (_instance._items.Count == 0) {
+            _instance.paths.SelectNotNull().ForEach(path => {
+                var dbItem = Resources.Load<DBEntry>(path);
+                if (dbItem != null) {
+                    _instance._items.Add(dbItem, path);
+                }
+            });
+        }
     }
 
     public static T Get<T>(string name) where T: DBEntry {
