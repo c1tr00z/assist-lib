@@ -21,6 +21,10 @@ namespace c1tr00z.AssistLib.UI {
                 Destroy(_currentFrame.gameObject);
             }
             _currentFrame = frameDBEntry.LoadPrefab<UIFrame>().Clone(transform);
+
+            if (stretch) {
+                _currentFrame.rectTransform.Stretch();
+            }
         }
     }
 }
