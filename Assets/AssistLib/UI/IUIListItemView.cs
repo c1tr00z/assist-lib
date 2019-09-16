@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IUIListItemView {
+namespace c1tr00z.AssistLib.UI {
+    public interface IUIListItemView {
 
-    void UpdateItem(object item);
+        void UpdateItem(object item);
 
+    }
 }
