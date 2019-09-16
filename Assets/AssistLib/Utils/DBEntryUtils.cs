@@ -21,7 +21,15 @@ public static class DBEntryUtils {
         return textAsset.text;
     }
 
-    public static SpriteRenderer LoadSprite(this DBEntry item, string key) {
+    public static SpriteRenderer LoadSpriteRenderer(this DBEntry item, string key) {
         return Load<SpriteRenderer>(item, key);
+    }
+
+    public static Sprite LoadSprite(this DBEntry item, string key) {
+        return item.Load<Sprite>(key);
+    }
+
+    public static Sprite LoadIcon(this DBEntry item) {
+        return item.LoadSprite("Icon");
     }
 }
