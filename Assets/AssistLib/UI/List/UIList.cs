@@ -7,7 +7,7 @@ namespace c1tr00z.AssistLib.UI {
 [RequireComponent(typeof(LayoutGroup))]
     public class UIList : MonoBehaviour {
 
-        [SerializeField] private UIListItem listItemSource;
+        [SerializeField] private UIListItemDBEntry listItemDBEntry;
 
         private List<UIListItem> _listItems;
 
@@ -26,7 +26,7 @@ namespace c1tr00z.AssistLib.UI {
         }
 
         private UIListItem CreateListItem(object item) {
-            var listItem = listItemSource.Clone();
+            var listItem = listItemDBEntry.LoadPrefab<UIListItem>().Clone();
             listItem.transform.SetParent(transform, false);
             listItem.transform.localScale = Vector3.one;
 
