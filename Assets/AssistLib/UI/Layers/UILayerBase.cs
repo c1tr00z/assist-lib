@@ -53,7 +53,7 @@ namespace c1tr00z.AssistLib.UI {
         protected UIFrame ShowFrame(UIFrameDBEntry frameItem, params object[] args) {
             var frame = frameItem.LoadFrame().Clone(rectTransform);
             frame.Show(this);
-            Stretch(frame.rectTransform);
+            frame.rectTransform.Stretch();
 
             if (args != null && args.Length > 0) {
                 frame.SendMessage("OnShowParams", args, SendMessageOptions.DontRequireReceiver);
@@ -67,13 +67,6 @@ namespace c1tr00z.AssistLib.UI {
 
         public void CloseAll() {
             currentFrames.ForEach(f => Close(f.GetComponent<DBEntryResource>().parent as UIFrameDBEntry));
-        }
-
-        protected void Stretch(RectTransform rectTransform) {
-            rectTransform.localScale = Vector3.one;
-            rectTransform.rect.Set(0, 0, 0, 0);
-            rectTransform.offsetMin = Vector2.zero;
-            rectTransform.offsetMax = Vector2.zero;
         }
     }
 }
