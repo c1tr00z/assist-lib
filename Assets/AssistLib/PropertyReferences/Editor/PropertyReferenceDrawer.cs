@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 	[CustomPropertyDrawer(typeof(PropertyReference))]
