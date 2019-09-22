@@ -57,12 +57,7 @@ public static class IEnumerableUtils {
     }
 
     public static T First<T>(this IEnumerable<T> enumerable) {
-        foreach (T t in enumerable) {
-            if (!t.Equals(default(T))) {
-                return t;
-            }
-        }
-        return default(T);
+        return Enumerable.FirstOrDefault(enumerable);
     }
 
     public static T Last<T>(this IEnumerable<T> enumerable) {
@@ -103,6 +98,16 @@ public static class IEnumerableUtils {
         return new List<T>(enumerable);
     }
 
+    public static List<T> ToUniqueList<T>(this IEnumerable<T> enumerable) {
+        var uniqueList = new List<T>();
+        enumerable.ForEach(item => {
+            if (!uniqueList.ContainsItem(item)) {
+                uniqueList.Add(item);
+            }
+        });
+        return uniqueList;
+    }
+
     public static T[] ToArray<T>(this IEnumerable<T> enumerable) {
 
         if (enumerable == null) {
@@ -138,7 +143,7 @@ public static class IEnumerableUtils {
     public static string ToPlainString<T>(this IEnumerable<T> enumerable) {
         var sb = new System.Text.StringBuilder();
 
-        sb.Append("[");
+        sb.Append(string.Format("[{0}][", enumerable.Count()));
         foreach (T item in enumerable) {
             sb.Append(item + ", ");
         }
@@ -233,5 +238,9 @@ public static class IEnumerableUtils {
                 list.Remove(item);
             }
         });
+    }
+
+    public static int IndexOf<T>(this IEnumerable<T> enumerable, T item) {
+        return enumerable.ToList().IndexOf(item);
     }
 }

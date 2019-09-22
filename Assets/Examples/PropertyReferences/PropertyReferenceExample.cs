@@ -8,5 +8,6 @@ namespace c1tr00z.AssistLib.PropertyReferences {
 		[ReferenceType(typeof(string))]
 		public PropertyReference test;
 
+        public string foo;
 	}
 }

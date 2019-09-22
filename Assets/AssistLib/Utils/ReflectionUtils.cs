@@ -29,7 +29,11 @@ public static class ReflectionUtils {
         return GetTypes().Where(t => t.IsSubclassOf(baseClass)).ToArray();
     }
 
-	public static FieldInfo GetPublicFieldInfo(this Type type, string fieldName) {
-		return type.GetField(fieldName, System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+    public static IEnumerable<PropertyInfo> GetPublicProperties(this Type type) {
+        return type.GetProperties(BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public);
+    }
+
+	public static PropertyInfo GetPublicPropertyInfo(this Type type, string fieldName) {
+		return type.GetProperty(fieldName, BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public);
 	}
 }

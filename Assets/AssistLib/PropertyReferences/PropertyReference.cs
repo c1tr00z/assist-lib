@@ -6,11 +6,9 @@ namespace c1tr00z.AssistLib.PropertyReferences {
 
         public GameObject target;
 
-        public string referenceString;
+        public string targetComponentTypeName;
 
-		public System.Type targetComponentType;
-
-		public int componentIndex;
+        public int componentIndex;
 
 		public string fieldName;
 	}
