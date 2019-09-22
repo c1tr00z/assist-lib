@@ -1,15 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace c1tr00z.AssistLib.FieldReferences {
-    [System.Serializable]
+namespace c1tr00z.AssistLib.PropertyReferences {
+	[System.Serializable]
     public class PropertyReference {
 
-        public GameObject reference;
+        public GameObject target;
 
         public string referenceString;
 
+		public System.Type targetComponentType;
 
-    }
+		public int componentIndex;
+
+		public string fieldName;
+	}
 }
