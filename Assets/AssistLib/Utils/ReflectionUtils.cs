@@ -19,7 +19,7 @@ public static class ReflectionUtils {
     }
 
 	public static Type GetTypeByName(string name) {
-		return GetTypes().Where(t => t.Name == name).First();	
+		return GetTypes().Where(t => t.FullName == name).First();	
 	}
 
     public static Type[] GetSubclassesOf(Type baseClass) {

@@ -41,13 +41,15 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
             System.Type selectedType = allComponents.First().GetType();
             var componentTypeProperty = (property.FindPropertyRelative(FIELD_COMPONENT_TYPE));
             if (componentTypeProperty != null && !string.IsNullOrEmpty(componentTypeProperty.stringValue)) {
-                selectedType = ReflectionUtils.GetTypeByName(componentTypeProperty.stringValue);
+				var savedType = ReflectionUtils.GetTypeByName(componentTypeProperty.stringValue);
+				selectedType = savedType != null ? savedType : selectedType;
             }
 
             var componentsPopupRect = new Rect(position.x, position.y + 40, position.width, 16);
             var componentIndexProperty = property.FindPropertyRelative(FIELD_COMPONENT_INDEX);
+			var selectedComponentIndex = componentIndexProperty.intValue;
 
-            var componentsByType = new Dictionary<System.Type, List<Component>>();
+			var componentsByType = new Dictionary<System.Type, List<Component>>();
             allComponents.ForEach(c => {
                 var type = c.GetType();
                 if (componentsByType.ContainsKey(type)) {
@@ -59,12 +61,19 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
                 }
             });
 
-            var selectedTypeIndex = EditorGUI.Popup(componentsPopupRect, componentIndexProperty.intValue, 
+			selectedComponentIndex = selectedComponentIndex < componentsByType[selectedType].Count ? selectedComponentIndex : 0;
+			var selectedComponent = componentsByType[selectedType][selectedComponentIndex];
+			var selectedTypeIndex = allComponents.IndexOf(selectedComponent);
+
+			selectedTypeIndex = EditorGUI.Popup(componentsPopupRect, selectedTypeIndex, 
                 allComponents.Select(c => string.Format("{0}[{1}]", c.GetType().Name, componentsByType[c.GetType()].IndexOf(c))).ToArray());
 
-            selectedType = allComponents[selectedTypeIndex].GetType();
-            componentTypeProperty.stringValue = selectedType.Name;
-            componentIndexProperty.intValue = selectedTypeIndex;
+			selectedComponent = allComponents[selectedTypeIndex];
+            selectedType = selectedComponent.GetType();
+			selectedComponentIndex = componentsByType[selectedType].IndexOf(selectedComponent);
+
+			componentTypeProperty.stringValue = selectedType.FullName;
+            componentIndexProperty.intValue = selectedComponentIndex;
 
             var allProperties = selectedType.GetPublicProperties().SelectNotNull().ToList();
             if (allProperties.Count == 0) {

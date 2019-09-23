@@ -5,9 +5,11 @@ using UnityEngine;
 namespace c1tr00z.AssistLib.PropertyReferences {
 	public class PropertyReferenceExample : MonoBehaviour {
 
-		[ReferenceType(typeof(Transform))]
+		[ReferenceType(typeof(string))]
 		public PropertyReference test;
 
-        public string foo;
+		private void Start () {
+			Debug.Log(test.Get<string>());
+		}
 	}
 }
