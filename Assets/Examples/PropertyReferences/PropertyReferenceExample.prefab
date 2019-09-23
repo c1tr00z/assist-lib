@@ -45,7 +45,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   test:
     target: {fileID: 2870595774807746331}
-    targetComponentTypeName: PropertyReferenceExample
-    componentIndex: 1
-    fieldName: transform
-  foo: 
+    targetComponentTypeName: c1tr00z.AssistLib.PropertyReferences.PropertyReferenceExample
+    componentIndex: 0
+    fieldName: name
