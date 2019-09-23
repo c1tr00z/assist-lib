@@ -1,5 +1,7 @@
-﻿namespace c1tr00z.AssistLib.PropertyReferences {
-	public class ReferenceTypeAttribute : System.Attribute {
+﻿using UnityEngine;
+
+namespace c1tr00z.AssistLib.PropertyReferences {
+	public class ReferenceTypeAttribute : PropertyAttribute {
 
 		public System.Type type { get; private set; }
 

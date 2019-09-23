@@ -5,8 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.PropertyReferences.Editor {
-	[CustomPropertyDrawer(typeof(PropertyReference))]
-
+	[CustomPropertyDrawer(typeof(ReferenceTypeAttribute))]
 	public class PropertyReferenceDrawer : PropertyDrawer {
 
         private static readonly string FIELD_TARGET_OBJECT = "target";
@@ -71,17 +70,36 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
             if (allProperties.Count == 0) {
                 return;
             }
-            var propertyNameProperty = property.FindPropertyRelative(FIELD_FIELD_NAME);
+
+			var drawerAttribute = attribute as ReferenceTypeAttribute;
+
+			if (drawerAttribute != null) {
+				var list = allProperties;
+				allProperties = new List<PropertyInfo>();
+				allProperties.AddRange(list.Where(p => p.PropertyType == drawerAttribute.type));
+				allProperties.AddRange(list.Where(p => p.PropertyType.IsSubclassOf(drawerAttribute.type)));
+				if (drawerAttribute.type.IsSubclassOf(typeof(string))) {
+					allProperties.AddRange(list.Where(p => !p.PropertyType.IsSubclassOf(drawerAttribute.type)));
+				}
+			}
+
+			var propertyNameProperty = property.FindPropertyRelative(FIELD_FIELD_NAME);
             var selectedProperty = propertyNameProperty == null 
                 || string.IsNullOrEmpty(propertyNameProperty.stringValue) 
                 || allProperties.Select(p => p.Name == propertyNameProperty.stringValue).Count() == 0
                 ? allProperties.First() 
                 : allProperties.Where(f => f.Name == propertyNameProperty.stringValue).First();
-            var propertiesByType = allProperties.Select(p => string.Format("{0}/{1}", p.PropertyType.Name, p.Name)).ToArray();
+
+			if (selectedProperty == null) {
+				selectedProperty = allProperties.First();
+			}
+
             if (selectedProperty == null) {
                 return;
             }
-            var selectedFieldIndex = propertiesByType.IndexOf(string.Format("{0}/{1}", selectedProperty.PropertyType.Name, selectedProperty.Name));
+			var propertiesByType = allProperties.Select(p => p.GetPropertyNameByType()).ToArray();
+
+            var selectedFieldIndex = propertiesByType.IndexOf(selectedProperty.GetPropertyNameByType());
 
             var fieldPopupRect = new Rect(position.x, position.y + 60, position.width, 16);
             selectedFieldIndex = EditorGUI.Popup(fieldPopupRect, selectedFieldIndex, propertiesByType);
@@ -91,7 +109,7 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 		}
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-            return 300;
+            return 80;
         }
     }
 }

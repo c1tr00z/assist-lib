@@ -36,4 +36,8 @@ public static class ReflectionUtils {
 	public static PropertyInfo GetPublicPropertyInfo(this Type type, string fieldName) {
 		return type.GetProperty(fieldName, BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public);
 	}
+
+	public static string GetPropertyNameByType(this PropertyInfo propertyInfo) {
+		return string.Format("{0}/{1}", propertyInfo.PropertyType.Name, propertyInfo.Name);
+	}
 }
