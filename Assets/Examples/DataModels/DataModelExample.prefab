@@ -90,6 +90,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _reference:
     target: {fileID: 5661519315666321074}
-    targetComponentTypeName: DataModelExample
-    componentIndex: 1
+    targetComponentTypeName: c1tr00z.AssistLib.DataModels.DataModelExample
+    componentIndex: 0
     fieldName: value
