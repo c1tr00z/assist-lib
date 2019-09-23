@@ -5,6 +5,10 @@ using UnityEngine;
 namespace c1tr00z.AssistLib.DataModels {
     public abstract class ValueReceiverBase : MonoBehaviour, IValueReceiver {
 
+		protected virtual void Awake() {
+			GetModels().ForEach(m => m.AddReceiver(this));
+		}
+
         public IEnumerable<IDataModelBase> GetModels() {
             var modelsList = new List<IDataModelBase>();
             var references = GetReferences();
