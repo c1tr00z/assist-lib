@@ -6,9 +6,7 @@ namespace c1tr00z.AssistLib.PropertyReferences {
 	public static class PropertyReferenceUtils {
 
 		public static T Get<T>(this PropertyReference propertyReference) {
-            var componenetType = ReflectionUtils.GetTypeByName(propertyReference.targetComponentTypeName);
-            var allComponents = propertyReference.target.GetComponents(componenetType).ToUniqueList();
-            var component = allComponents[propertyReference.componentIndex];
+            var component = propertyReference.GetTargetComponent();
             var type = component.GetType();
 			var field = type.GetPublicPropertyInfo(propertyReference.fieldName);
 			if (field == null) {
@@ -20,5 +18,11 @@ namespace c1tr00z.AssistLib.PropertyReferences {
 			}
 			return default(T);
 		}
+
+        public static Component GetTargetComponent(this PropertyReference propertyReference) {
+            var componenetType = ReflectionUtils.GetTypeByName(propertyReference.targetComponentTypeName);
+            var allComponents = propertyReference.target.GetComponents(componenetType).ToUniqueList();
+            return allComponents[propertyReference.componentIndex];
+        }
 	}
 }
