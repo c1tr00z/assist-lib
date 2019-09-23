@@ -47,5 +47,5 @@ MonoBehaviour:
     target: {fileID: 2870595774807746331}
     targetComponentTypeName: PropertyReferenceExample
     componentIndex: 1
-    fieldName: name
+    fieldName: transform
   foo: 
