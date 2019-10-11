@@ -18,7 +18,7 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 
 			position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
 
-            var targetRefRect = new Rect(position.x, position.y + 20, position.width, 16);
+            var targetRefRect = new Rect(position.x, position.y, position.width, 16);
             var targetRefProperty = property.FindPropertyRelative(FIELD_TARGET_OBJECT);
             EditorGUI.PropertyField(targetRefRect, targetRefProperty, GUIContent.none);
 
@@ -45,7 +45,7 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 				selectedType = savedType != null ? savedType : selectedType;
             }
 
-            var componentsPopupRect = new Rect(position.x, position.y + 40, position.width, 16);
+            var componentsPopupRect = new Rect(position.x, position.y + 20, position.width, 16);
             var componentIndexProperty = property.FindPropertyRelative(FIELD_COMPONENT_INDEX);
 			var selectedComponentIndex = componentIndexProperty.intValue;
 
@@ -87,6 +87,7 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 				allProperties = new List<PropertyInfo>();
 				allProperties.AddRange(list.Where(p => p.PropertyType == drawerAttribute.type));
 				allProperties.AddRange(list.Where(p => p.PropertyType.IsSubclassOf(drawerAttribute.type)));
+				allProperties.AddRange(list.Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == drawerAttribute.type));
 				if (drawerAttribute.type.IsSubclassOf(typeof(string))) {
 					allProperties.AddRange(list.Where(p => !p.PropertyType.IsSubclassOf(drawerAttribute.type)));
 				}
@@ -110,7 +111,7 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 
             var selectedFieldIndex = propertiesByType.IndexOf(selectedProperty.GetPropertyNameByType());
 
-            var fieldPopupRect = new Rect(position.x, position.y + 60, position.width, 16);
+            var fieldPopupRect = new Rect(position.x, position.y + 40, position.width, 16);
             selectedFieldIndex = EditorGUI.Popup(fieldPopupRect, selectedFieldIndex, propertiesByType);
             propertyNameProperty.stringValue = allProperties[selectedFieldIndex].Name;
 
@@ -118,7 +119,7 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 		}
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-            return 80;
+            return 60;
         }
     }
 }

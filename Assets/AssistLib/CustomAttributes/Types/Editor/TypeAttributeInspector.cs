@@ -28,11 +28,11 @@ public class TypeAttributeInspector : ExtendedPropertyDrawer {
             _selectedTypes = ReflectionUtils.GetSubclassesOf(typeAttribute.baseType);
         }
 
-        if (EditorGUI.DropdownButton(position, new GUIContent("123"), FocusType.Keyboard)) {
+        //if (EditorGUI.DropdownButton(position, new GUIContent("123"), FocusType.Keyboard)) {
             //PopupWindow.Show(position, )
             //var bridge = new PopupBridge(callback, types);
             //bridge.selectedType = selected;
             //EditorListPopup<Type>.ShowPopup(CalculateRect(rect, types), bridge);
-        }// .Popup( (0, _selectedTypes.Select(t => t.FullName).ToArray());
+        //}// .Popup( (0, _selectedTypes.Select(t => t.FullName).ToArray());
     }
 }
