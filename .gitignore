@@ -7,3 +7,6 @@ assist-lib-c#.sln
 Assembly-CSharp-Editor.csproj
 Logs
 assist-lib.sln
+.idea/
+Assets/Plugins/Editor/JetBrains.meta
+Assets/Plugins/Editor/JetBrains/
