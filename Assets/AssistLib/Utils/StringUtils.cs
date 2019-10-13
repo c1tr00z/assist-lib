@@ -29,7 +29,7 @@ namespace c1tr00z.AssistLib.Localization {
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
         
-        public static string GenerateWord(int lenght, bool fromCapital) {
+       public static string GenerateWord(int lenght, bool fromCapital) {
             var vovels = "AEIOUY".ToCharArray();
             var consonants = "BCDFGHJKLMNPQRSTVWXZ".ToCharArray();
 
@@ -44,9 +44,24 @@ namespace c1tr00z.AssistLib.Localization {
 
             var fromVowels = UnityEngine.Random.Range(0, 2) == 0;
             var str = "";
+            var prevIsFromVowels = !fromVowels;
+            int sameTypeCounter = 0;
+            int maxAllowedSameType = !fromVowels && lenght < 3 ? 1 : 2;
             for (var i = 0; i < lenght; i++) {
                 str += fromVowels ? vovels.RandomItem() : consonants.RandomItem();
                 fromVowels = UnityEngine.Random.Range(0, 2) == 0;
+                if (prevIsFromVowels == fromVowels) {
+                    sameTypeCounter++;
+                } else {
+                    sameTypeCounter = 1;
+                }
+
+                if (sameTypeCounter >= maxAllowedSameType) {
+                    fromVowels = !fromVowels;
+                    sameTypeCounter = 0;
+                }
+                
+                prevIsFromVowels = fromVowels;
             }
 
             str = str.ToLower();
@@ -55,7 +70,6 @@ namespace c1tr00z.AssistLib.Localization {
             var tail = str.Substring(1, str.Length - 1);
             return $"{(fromCapital ? head.ToUpper() : head)}{tail}";
         }
-
         public static string GenerateSentence(int wordsCount, int minWordLenght, int maxWordLenght, bool everyWordIsCapital = false) {
             var wordsList = new List<string>();
             wordsCount.DoTimes(i => wordsList.Add(GenerateWord(UnityEngine.Random.Range(minWordLenght, maxWordLenght + 1)
