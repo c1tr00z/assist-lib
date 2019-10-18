@@ -5,19 +5,35 @@
         private static string KEY_DESCRIPTION = "Description";
 
         public static string GetLocalizationText(this string key) {
-            return Localization.Translate(key);
+            return key.GetLocalizationText(false);
+        }
+        
+        public static string GetLocalizationText(this string key, bool random) {
+            return random ? Localization.TranslateRandom(key) : Localization.Translate(key);
+        }
+        
+        public static string GetLocalizationText(this string key, bool random, params object[] localizationParams) {
+            return string.Format(GetLocalizationText(key, random), localizationParams);
         }
         
         public static string GetLocalizationText(this string key, params object[] localizationParams) {
-            return string.Format(GetLocalizationText(key), localizationParams);
+            return key.GetLocalizationText(false, localizationParams);
         }
 
+        public static string GetLocalizationText(this DBEntry dBEntry, bool random, string key) {
+            return $"{dBEntry.name}@{key}".GetLocalizationText(random);
+        }
+        
         public static string GetLocalizationText(this DBEntry dBEntry, string key) {
-            return string.Format("{0}@{1}", dBEntry.name, key).GetLocalizationText();
+            return dBEntry.GetLocalizationText(key, false);
         }
 
+        public static string GetLocalizationText(this DBEntry dBEntry, string key, bool random, params object[] localizationParams) {
+            return string.Format($"{dBEntry.name}@{key}".GetLocalizationText(random), localizationParams);
+        }
+        
         public static string GetLocalizationText(this DBEntry dBEntry, string key, params object[] localizationParams) {
-            return string.Format(GetLocalizationText(dBEntry, key), localizationParams);
+            return dBEntry.GetLocalizationText(key, false, localizationParams);
         }
 
         public static string GetTitle(this DBEntry dBEntry) {
