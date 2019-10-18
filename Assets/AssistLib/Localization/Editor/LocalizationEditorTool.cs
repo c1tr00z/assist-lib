@@ -1,6 +1,7 @@
 ﻿using c1tr00z.AssistLib.GoogleSpreadsheetImporter;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.Localization {
@@ -29,6 +30,7 @@ namespace c1tr00z.AssistLib.Localization {
                 }
                 var json = JSONUtuls.Serialize(kvp.Value).DecodeEncodedNonAscii();
                 FileUtils.SaveTextToFile(PathUtils.Combine(Application.dataPath, "Localization", "Resources", "Languages", kvp.Key + "@text.txt"), json);
+                AssetDatabase.Refresh();
             }
 
             Debug.Log(JSONUtuls.Serialize(localization).DecodeEncodedNonAscii());

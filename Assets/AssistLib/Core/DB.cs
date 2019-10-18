@@ -33,7 +33,7 @@ public class DB : DBEntry {
 
     public static T Get<T>(string name) where T: DBEntry {
         CheckItems();
-        return GetAll<T>().SelectNotNull().Where(item => item.name == name).First();
+        return GetAll<T>().SelectNotNull().Where(item => item != null && item.name == name).First();
     }
 
     public static T Get<T>() where T : DBEntry {

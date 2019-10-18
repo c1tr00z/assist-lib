@@ -13,18 +13,26 @@ namespace c1tr00z.AssistLib.Localization {
         private static string LOCALIZATION_SETTINGS_KEY = "Localization";
         private static string LOCALIZATION_SAVED_LANGUAGE_KEY = "Localization";
 
-        private static bool _inited = false;
+        private static LocalizationSettingsDBEntry _settings;
 
-        private static Dictionary<string, string> _translations;
+        private static bool _inited = false;
 
         public static System.Action<LanguageItem> changeLanguage = (language) => { };
 
-        public static string Translate(string key) {
+        public static bool isMultipleTranslationsSupported {
+            get {
+                Init();
+                return _settings != null && _settings.supportMultipleTranslations;
+            }
+        }
 
-            var translation = key;
-
+        private static void Init() {
             if (!_inited) {
+                _settings = DB.Get<LocalizationSettingsDBEntry>();
+                
                 _defaultLanguage = DB.Get<LanguageItem>(_defaultSystemLanguage.ToString());
+                
+                Debug.LogError(_defaultLanguage);
 
                 var localizationSettingsData = PlayerPrefsLocalData.GetDataNode(LOCALIZATION_SETTINGS_KEY);
                 var savedLanguageString = localizationSettingsData.ContainsKey(LOCALIZATION_SAVED_LANGUAGE_KEY)
@@ -44,6 +52,12 @@ namespace c1tr00z.AssistLib.Localization {
 
                 _inited = true;
             }
+        }
+
+        private static string GetTranslationString(string key) {
+            var translation = key;
+
+            Init();
 
             if (_defaultLanguage != null && _defaultLanguage.translations != null 
                 && _defaultLanguage.translations.ContainsKey(key) && !string.IsNullOrEmpty(_defaultLanguage.translations[key])) {
@@ -53,6 +67,28 @@ namespace c1tr00z.AssistLib.Localization {
             if (currentLanguage != null && currentLanguage.translations != null 
                 && currentLanguage.translations.ContainsKey(key) && !string.IsNullOrEmpty(currentLanguage.translations[key])) {
                 translation = currentLanguage.translations[key];
+            }
+
+            return translation;
+        }
+
+        public static string Translate(string key) {
+
+            var translation = GetTranslationString(key);
+
+            if (isMultipleTranslationsSupported) {
+                translation = translation.Split('|').First();
+            }
+
+            return translation;
+        }
+        
+        public static string TranslateRandom(string key) {
+
+            var translation = GetTranslationString(key);
+
+            if (isMultipleTranslationsSupported) {
+                translation = translation.Split('|').RandomItem();
             }
 
             return translation;

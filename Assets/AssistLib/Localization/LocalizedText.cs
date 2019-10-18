@@ -14,7 +14,7 @@ namespace c1tr00z.AssistLib.Localization {
 
         protected abstract string GetLocalizedText();
 
-        private void Localize() {
+        public void Localize() {
             GetComponent<Text>().text = GetLocalizedText();
         }
     }
