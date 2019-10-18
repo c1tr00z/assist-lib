@@ -8,32 +8,32 @@
             return key.GetLocalizationText(false);
         }
         
-        public static string GetLocalizationText(this string key, bool random) {
-            return random ? Localization.TranslateRandom(key) : Localization.Translate(key);
+        public static string GetLocalizationTextRandom(this string key) {
+            return Localization.TranslateRandom(key);
         }
         
-        public static string GetLocalizationText(this string key, bool random, params object[] localizationParams) {
-            return string.Format(GetLocalizationText(key, random), localizationParams);
+        public static string GetLocalizationTextRandom(this string key, params object[] localizationParams) {
+            return string.Format(GetLocalizationTextRandom(key), localizationParams);
         }
         
         public static string GetLocalizationText(this string key, params object[] localizationParams) {
-            return key.GetLocalizationText(false, localizationParams);
+            return string.Format(GetLocalizationText(key), localizationParams);
         }
 
-        public static string GetLocalizationText(this DBEntry dBEntry, bool random, string key) {
-            return $"{dBEntry.name}@{key}".GetLocalizationText(random);
+        public static string GetLocalizationTextRandom(this DBEntry dBEntry, string key) {
+            return $"{dBEntry.name}@{key}".GetLocalizationTextRandom();
         }
         
         public static string GetLocalizationText(this DBEntry dBEntry, string key) {
-            return dBEntry.GetLocalizationText(key, false);
+            return $"{dBEntry.name}@{key}".GetLocalizationText();
         }
 
-        public static string GetLocalizationText(this DBEntry dBEntry, string key, bool random, params object[] localizationParams) {
-            return string.Format($"{dBEntry.name}@{key}".GetLocalizationText(random), localizationParams);
+        public static string GetLocalizationTextRandom(this DBEntry dBEntry, string key, params object[] localizationParams) {
+            return string.Format(dBEntry.GetLocalizationTextRandom(key), localizationParams);
         }
         
         public static string GetLocalizationText(this DBEntry dBEntry, string key, params object[] localizationParams) {
-            return dBEntry.GetLocalizationText(key, false, localizationParams);
+            return string.Format(dBEntry.GetLocalizationText(key), localizationParams);
         }
 
         public static string GetTitle(this DBEntry dBEntry) {
