@@ -4,8 +4,16 @@
         private static string KEY_TITLE = "Title";
         private static string KEY_DESCRIPTION = "Description";
 
+        public static string GetLocalizationText(this string key) {
+            return Localization.Translate(key);
+        }
+        
+        public static string GetLocalizationText(this string key, params object[] localizationParams) {
+            return string.Format(GetLocalizationText(key), localizationParams);
+        }
+
         public static string GetLocalizationText(this DBEntry dBEntry, string key) {
-            return Localization.Translate(string.Format("{0}@{1}", dBEntry.name, key));
+            return string.Format("{0}@{1}", dBEntry.name, key).GetLocalizationText();
         }
 
         public static string GetLocalizationText(this DBEntry dBEntry, string key, params object[] localizationParams) {
