@@ -31,8 +31,6 @@ namespace c1tr00z.AssistLib.Localization {
                 _settings = DB.Get<LocalizationSettingsDBEntry>();
                 
                 _defaultLanguage = DB.Get<LanguageItem>(_defaultSystemLanguage.ToString());
-                
-                Debug.LogError(_defaultLanguage);
 
                 var localizationSettingsData = PlayerPrefsLocalData.GetDataNode(LOCALIZATION_SETTINGS_KEY);
                 var savedLanguageString = localizationSettingsData.ContainsKey(LOCALIZATION_SAVED_LANGUAGE_KEY)
