@@ -5,7 +5,7 @@
         private static string KEY_DESCRIPTION = "Description";
 
         public static string GetLocalizationText(this string key) {
-            return key.GetLocalizationText(false);
+            return Localization.Translate(key);
         }
         
         public static string GetLocalizationTextRandom(this string key) {

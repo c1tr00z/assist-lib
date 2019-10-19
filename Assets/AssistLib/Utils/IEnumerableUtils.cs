@@ -15,7 +15,10 @@ public static class IEnumerableUtils {
             list.AddRange(items);
             array = list.ToArray();
         }
-        var randomized = UnityEngine.Random.Range(0, array.Length - 1);
+        var randomized = UnityEngine.Random.Range(0, array.Length);
+        if (randomized >= array.Length && array.Length > 0) {
+            randomized = array.Length - 1;
+        }
         if (randomized < 0 || array.Length <= randomized) {
             return default(T);
         }
