@@ -22,7 +22,7 @@ public class App : BehaviourSingleton<App> {
     }
 
     IEnumerator C_Modules() {
-        var appModules = DB.GetAll<ModuleDBEntry>().SelectNotNull().ToList();
+        var appModules = DB.GetAll<ModuleDBEntry>().Where(m => m.enabled).SelectNotNull().ToList();
         appModules.Sort(new System.Comparison<ModuleDBEntry>((m1, m2) => {
             return m1.priority.CompareTo(m2.priority);
         }));
