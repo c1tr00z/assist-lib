@@ -4,6 +4,10 @@ using c1tr00z.AssistLib.PropertyReferences;
 namespace c1tr00z.AssistLib.DataModels {
     public abstract class DataTranslator : DataModelBase, IValueReceiver {
 
+        protected virtual void Awake() {
+            GetModels().ForEach(m => m.AddReceiver(this));
+        }
+        
         #region IValueReceiver Implementation
 
         public abstract void UpdateReceiver();
