@@ -21,8 +21,9 @@ namespace c1tr00z.AssistLib.UI {
             get { return UI.instance.IsTopFrameInStack(this); }
         }
 
-        public void Show(UILayerBase layer) {
+        public void Show(UILayerBase layer, params object[] args) {
             this.layer = layer;
+            GetComponentsInChildren<IUIFrameView>().ForEach(view => view.OnShow(args));
         }
 
         public void Close() {
