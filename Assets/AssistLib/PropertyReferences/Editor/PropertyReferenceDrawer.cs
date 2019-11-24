@@ -15,6 +15,10 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
         private static readonly string FIELD_FIELD_NAME = "fieldName";
 
         private SerializedProperty _property;
+        private SerializedProperty _targetRefProperty;
+        private SerializedProperty _componentTypeProperty;
+        private SerializedProperty _componentIndexProperty;
+        private SerializedProperty _propertyNameProperty;
         
         private GameObject _targetGameObject;
         private List<Component> _allComponents;
@@ -22,29 +26,43 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
         private string[] _displayedCoomponents;
         private Type _selectedType;
         private List<PropertyInfo> _selectedTypeProperties = new List<PropertyInfo>();
+        private string[] _propertiesByType;
 
         public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
 			EditorGUI.BeginProperty(position, label, property);
 
+			var propertyChanged = false;
+			if (_property != property) {
+				propertyChanged = true;
+				_property = property;
+			}
+
+			if (propertyChanged) {
+				_targetRefProperty = property.FindPropertyRelative(FIELD_TARGET_OBJECT);
+				_componentTypeProperty = property.FindPropertyRelative(FIELD_COMPONENT_TYPE);
+				_componentIndexProperty = property.FindPropertyRelative(FIELD_COMPONENT_INDEX);
+				_propertyNameProperty = property.FindPropertyRelative(FIELD_FIELD_NAME);
+			}
+
 			position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
 
             var targetRefRect = new Rect(position.x, position.y, position.width, 16);
-            var targetRefProperty = property.FindPropertyRelative(FIELD_TARGET_OBJECT);
-            EditorGUI.PropertyField(targetRefRect, targetRefProperty, GUIContent.none);
+            
+            EditorGUI.PropertyField(targetRefRect, _targetRefProperty, GUIContent.none);
 
-            if (targetRefProperty.objectReferenceValue == null) {
+            if (_targetRefProperty.objectReferenceValue == null) {
                 return;
             }
 
-            var gameObject = targetRefProperty.objectReferenceValue as GameObject;
+            var gameObject = _targetRefProperty.objectReferenceValue as GameObject;
 
             if (gameObject == null) {
                 return;
             }
 
-            var sameGameObject = _targetGameObject == gameObject;
+            var gameObjectChanged = _targetGameObject != gameObject;
 
-            if (!sameGameObject) {
+            if (gameObjectChanged) {
 	            _allComponents = gameObject.GetComponents<Component>().ToList();
 	            
 	            _componentsByType = new Dictionary<System.Type, List<Component>>();
@@ -68,20 +86,24 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
             if (_allComponents.Count == 0) {
                 return;
             }
+
+            var selectedTypeChanged = false;
+            if (gameObjectChanged || (_selectedType == null && _componentTypeProperty != null && !string.IsNullOrEmpty(_componentTypeProperty.stringValue))) {
+	            var savedType = ReflectionUtils.GetTypeByName(_componentTypeProperty.stringValue);
+				if (savedType != _selectedType) {
+					_selectedType = savedType;
+					selectedTypeChanged = true;
+				}
+            }
             
-            var componentTypeProperty = (property.FindPropertyRelative(FIELD_COMPONENT_TYPE));
-            if (componentTypeProperty != null && !string.IsNullOrEmpty(componentTypeProperty.stringValue)) {
-				var savedType = ReflectionUtils.GetTypeByName(componentTypeProperty.stringValue);
-				_selectedType = savedType != null ? savedType : _selectedType;
+            if (_selectedType == null || !_componentsByType.ContainsKey(_selectedType)) {
+	            _selectedType = _allComponents.First().GetType();
+	            selectedTypeChanged = true;
             }
 
             var componentsPopupRect = new Rect(position.x, position.y + 20, position.width, 16);
-            var componentIndexProperty = property.FindPropertyRelative(FIELD_COMPONENT_INDEX);
-			var selectedComponentIndex = componentIndexProperty.intValue;
-
-            if (_selectedType == null || !_componentsByType.ContainsKey(_selectedType)) {
-	            _selectedType = _allComponents.First().GetType();
-            }
+            
+			var selectedComponentIndex = _componentIndexProperty.intValue;
 
             selectedComponentIndex = selectedComponentIndex < _componentsByType[_selectedType].Count ? selectedComponentIndex : 0;
 			var selectedComponent = _componentsByType[_selectedType][selectedComponentIndex];
@@ -92,14 +114,18 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 
 			selectedComponent = _allComponents[selectedTypeIndex];
 			var newSelectedType = selectedComponent.GetType();
-			var componentChanged = newSelectedType != _selectedType;
-			_selectedType = newSelectedType;
+
+			if (_selectedType != newSelectedType) {
+				_selectedType = newSelectedType;
+				selectedTypeChanged = true;
+			}
+			
 			selectedComponentIndex = _componentsByType[_selectedType].IndexOf(selectedComponent);
 
-			componentTypeProperty.stringValue = _selectedType.FullName;
-            componentIndexProperty.intValue = selectedComponentIndex;
+			_componentTypeProperty.stringValue = _selectedType.FullName;
+            _componentIndexProperty.intValue = selectedComponentIndex;
 
-            if (componentChanged || _selectedTypeProperties.Count == 0) {
+            if (selectedTypeChanged || _selectedTypeProperties.Count == 0) {
 	            _selectedTypeProperties = _selectedType.GetPublicProperties().SelectNotNull().ToList();
 	            
 	            if (_selectedTypeProperties.Count == 0) {
@@ -127,13 +153,12 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 	            
 	            _propertiesByType = _selectedTypeProperties.Select(p => p.GetPropertyNameByType()).ToArray();
             }
-
-			var propertyNameProperty = property.FindPropertyRelative(FIELD_FIELD_NAME);
-            var selectedProperty = propertyNameProperty == null 
-                || string.IsNullOrEmpty(propertyNameProperty.stringValue) 
-                || _selectedTypeProperties.Select(p => p.Name == propertyNameProperty.stringValue).Count() == 0
+			
+            var selectedProperty = _propertyNameProperty == null 
+                || string.IsNullOrEmpty(_propertyNameProperty.stringValue) 
+                || _selectedTypeProperties.Select(p => p.Name == _propertyNameProperty.stringValue).Count() == 0
                 ? _selectedTypeProperties.First() 
-                : _selectedTypeProperties.Where(f => f.Name == propertyNameProperty.stringValue).First();
+                : _selectedTypeProperties.Where(f => f.Name == _propertyNameProperty.stringValue).First();
 
 			if (selectedProperty == null) {
 				selectedProperty = _selectedTypeProperties.First();
@@ -147,7 +172,7 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 
             var fieldPopupRect = new Rect(position.x, position.y + 40, position.width, 16);
             selectedFieldIndex = EditorGUI.Popup(fieldPopupRect, selectedFieldIndex, _propertiesByType);
-            propertyNameProperty.stringValue = _selectedTypeProperties[selectedFieldIndex].Name;
+            _propertyNameProperty.stringValue = _selectedTypeProperties[selectedFieldIndex].Name;
 
             EditorGUI.EndProperty();
 		}
