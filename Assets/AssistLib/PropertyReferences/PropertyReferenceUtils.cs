@@ -16,7 +16,6 @@ namespace c1tr00z.AssistLib.PropertyReferences {
                 if (field.GetValue(component, null) == null) {
                     return default(T);
                 }
-                Debug.LogError((object)field.GetValue(component, null).ToString());
                 return (T)(object)field.GetValue(component, null).ToString();
             }
             var value = field.GetValue(component, null);
