@@ -3,6 +3,8 @@ using c1tr00z.AssistLib.PropertyReferences;
 
 namespace c1tr00z.AssistLib.DataModels {
     public abstract class DataTranslator : DataModelBase, IValueReceiver {
+        
+        private List<IDataModelBase> _models = null;
 
         protected virtual void Awake() {
             GetModels().ForEach(m => m.AddReceiver(this));
@@ -10,19 +12,30 @@ namespace c1tr00z.AssistLib.DataModels {
         
         #region IValueReceiver Implementation
 
+        public bool isRecieverEnabled {
+            get { return isDataModelEnabled && GetModels().All(m => m.isDataModelEnabled); }
+        }
+        
         public abstract void UpdateReceiver();
 
         public IEnumerable<IDataModelBase> GetModels() {
-            var modelsList = new List<IDataModelBase>();
-            var references = GetReferences();
-            while (references.MoveNext()) {
-                var reference = references.Current;
-                var targetComponent = reference.GetTargetComponent();
-                if (targetComponent is IDataModelBase) {
-                    modelsList.Add(targetComponent as IDataModelBase);
+            if (_models == null) {
+                _models = new List<IDataModelBase>();
+                var references = GetReferences();
+                while (references.MoveNext()) {
+                    var reference = references.Current;
+                    var targetComponent = reference.GetTargetComponent();
+                    var model = targetComponent as IDataModelBase;
+                    if (model == null) {
+                        continue;
+                    }
+                    if (!_models.Contains(model)) {
+                        _models.Add(model);
+                    }
                 }
             }
-            return modelsList;
+                
+            return _models;
         }
 
         #endregion
