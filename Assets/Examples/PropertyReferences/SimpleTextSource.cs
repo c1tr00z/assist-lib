@@ -5,7 +5,11 @@ using UnityEngine;
 namespace c1tr00z.AssistLib.PropertyReferences {
     public class SimpleTextSource : DataModelBase {
         public string text { get; private set; }
-        
+
+        public override bool isDataModelEnabled {
+            get { return !string.IsNullOrEmpty(text); }
+        }
+
         private void Start() {
             Refresh();
         }
