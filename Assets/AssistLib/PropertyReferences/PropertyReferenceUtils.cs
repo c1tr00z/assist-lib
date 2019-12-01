@@ -13,6 +13,10 @@ namespace c1tr00z.AssistLib.PropertyReferences {
                 return default(T);
             }
             if (typeof(T) == typeof(string)) {
+                if (field.GetValue(component, null) == null) {
+                    return default(T);
+                }
+                Debug.LogError((object)field.GetValue(component, null).ToString());
                 return (T)(object)field.GetValue(component, null).ToString();
             }
             var value = field.GetValue(component, null);
