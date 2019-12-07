@@ -16,6 +16,6 @@ public class DBItemsPostprocessor : AssetPostprocessor {
     }
 
     private static bool ContainsAsset(string[] paths) {
-        return paths.Any(p => p.ToLower().EndsWith(".asset") || p.ToLower().EndsWith(".prefab"));
+        return paths.Any(p => p.ToLower().EndsWith(".asset") || p.Contains("@"));
     }
 }
