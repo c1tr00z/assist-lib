@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -67,27 +68,47 @@ public static class ItemsEditor {
         var itemsObject = Resources.Load<DB>("DB");
         var dirs = new List<string>();
         var items = Resources.LoadAll<DBEntry>("");
-        itemsObject.paths = items.Select(i => {
+        var newItemsPaths = items.Select(i => {
+            Debug.Log($"CollectItems: {i}");
             var path = AssetDatabase.GetAssetPath(i).Replace(".asset", "");
+            Debug.Log($"CollectItems: {path}");
             path = (path.Contains("Resources")) ?
                 path.Replace(path.Substring(0, path.IndexOf("Resources") + "Resources/".Length), "") :
                 path;
             return path;
         }).ToArray();
+        if (itemsObject.paths.Length != newItemsPaths.Length) {
+            itemsObject.paths = newItemsPaths;
+        }
         foreach (DBEntry i in items) {
             var itemPrefab = i.LoadPrefab<GameObject>();
             if (itemPrefab != null) {
 
 #if UNITY_2018_3_OR_NEWER
+                var save = false;
                 var path = AssetDatabase.GetAssetPath(itemPrefab);
                 var prefabGO = PrefabUtility.LoadPrefabContents(path);
                 var itemResource = prefabGO.GetComponent<DBEntryResource>();
                 if (itemResource == null) {
                     itemResource = prefabGO.AddComponent(typeof(DBEntryResource)) as DBEntryResource;
+                    save = true;
                 }
-                itemResource.SetParent(i, "Prefab");
-                PrefabUtility.SaveAsPrefabAsset(prefabGO, path);
-                EditorUtility.SetDirty(itemPrefab);
+
+                if (!save && (itemResource.parent != i || itemResource.key != "Prefab")) {
+                    itemResource.SetParent(i, "Prefab");
+                    save = true;
+                }
+
+                if (save) {
+                    try {
+                        Debug.LogError($"Saving: {path}");
+                        PrefabUtility.SaveAsPrefabAsset(prefabGO, path);
+                        EditorUtility.SetDirty(itemPrefab);
+                    }
+                    catch (Exception e) {
+                        Debug.LogError(e);
+                    }
+                }
 #else
                 var itemResource = itemPrefab.GetComponent<DBEntryResource>();
                 if (itemResource == null) {
