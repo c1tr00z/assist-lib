@@ -15,7 +15,10 @@ public static class IEnumerableUtils {
             list.AddRange(items);
             array = list.ToArray();
         }
-        var randomized = UnityEngine.Random.Range(0, array.Length - 1);
+        var randomized = UnityEngine.Random.Range(0, array.Length);
+        if (randomized >= array.Length && array.Length > 0) {
+            randomized = array.Length - 1;
+        }
         if (randomized < 0 || array.Length <= randomized) {
             return default(T);
         }
@@ -242,5 +245,14 @@ public static class IEnumerableUtils {
 
     public static int IndexOf<T>(this IEnumerable<T> enumerable, T item) {
         return enumerable.ToList().IndexOf(item);
+    }
+    
+    public static List<int> MakeList(this int lenght, Func<int, int> processor = null) {
+        var list = new List<int>();
+        for (var i = 0; i < lenght; i++)
+        {
+            list.Add(processor != null ? processor(i) : i);
+        }
+        return list;
     }
 }
