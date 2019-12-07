@@ -7,5 +7,6 @@ namespace c1tr00z.AssistLib.UI {
 
         void UpdateItem(object item);
 
+        void UpdateView();
     }
 }
