@@ -7,5 +7,6 @@ namespace c1tr00z.AssistLib.DataModels {
         bool isDataModelEnabled { get; }
         void OnDataChanged();
         void AddReceiver(IValueReceiver receiver);
+        void RemoveReceiver(IValueReceiver receiver);
     }
 }

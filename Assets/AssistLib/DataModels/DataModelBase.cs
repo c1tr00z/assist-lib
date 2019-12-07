@@ -13,7 +13,18 @@ namespace c1tr00z.AssistLib.DataModels {
         private List<IValueReceiver> _valueReceivers = new List<IValueReceiver>();
 
         public void AddReceiver(IValueReceiver receiver) {
+            if (_valueReceivers.Contains(receiver)) {
+                return;
+            }
             _valueReceivers.Add(receiver);
+        }
+
+        public void RemoveReceiver(IValueReceiver receiver) {
+            if (!_valueReceivers.Contains(receiver)) {
+                return;
+            }
+
+            _valueReceivers.Remove(receiver);
         }
 
 
