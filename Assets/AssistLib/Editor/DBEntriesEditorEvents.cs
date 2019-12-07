@@ -5,6 +5,7 @@ namespace AssistLib.Editor {
     public class DBEntriesEditorEvents {
         public DBEntriesEditorEvents() {
             EditorApplication.projectChanged += EditorApplicationOnProjectChanged;
+            ItemsEditor.CollectItems();
         }
 
         private void EditorApplicationOnProjectChanged() {
