@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DB
   m_EditorClassIdentifier: 
   paths:
+  - DateComboboxCell
   - DB
   - Languages/English
   - LocalizationDocument
