@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using c1tr00z.AssistLib.DataBase.Editor;
 using UnityEditor;
-using UnityEngine;
 
 namespace c1tr00z.AssistLib.UI.Editor {
     public static class EditorUIItemsUtils {
