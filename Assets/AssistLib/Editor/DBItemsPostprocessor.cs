@@ -1,21 +1,25 @@
 ﻿using System.Linq;
 using UnityEditor;
 
-public class DBItemsPostprocessor : AssetPostprocessor {
-    
-    private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets,
-        string[] movedFromAssetPaths) {
-        var reCollectDB = false;
+namespace c1tr00z.AssistLib.DataBase.Editor {
 
-        reCollectDB =
-            ContainsAsset(importedAssets) || ContainsAsset(deletedAssets) || ContainsAsset(movedAssets);
+    public class DBItemsPostprocessor : AssetPostprocessor {
 
-        if (reCollectDB) {
-            ItemsEditor.CollectItems();
+        private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets,
+            string[] movedAssets,
+            string[] movedFromAssetPaths) {
+            var reCollectDB = false;
+
+            reCollectDB =
+                ContainsAsset(importedAssets) || ContainsAsset(deletedAssets) || ContainsAsset(movedAssets);
+
+            if (reCollectDB) {
+                ItemsEditor.AutoCollect();
+            }
         }
-    }
 
-    private static bool ContainsAsset(string[] paths) {
-        return paths.Any(p => p.ToLower().EndsWith(".asset") || p.Contains("@"));
+        private static bool ContainsAsset(string[] paths) {
+            return paths.Any(p => p.ToLower().EndsWith(".asset") || p.Contains("@"));
+        }
     }
 }

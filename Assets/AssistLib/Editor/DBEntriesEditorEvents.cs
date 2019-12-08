@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-namespace AssistLib.Editor {
+namespace c1tr00z.AssistLib.DataBase.Editor {
     [InitializeOnLoad]
     public class DBEntriesEditorEvents {
         public DBEntriesEditorEvents() {
@@ -9,7 +9,7 @@ namespace AssistLib.Editor {
         }
 
         private void EditorApplicationOnProjectChanged() {
-            ItemsEditor.CollectItems();
+            ItemsEditor.AutoCollect();
         }
     }
 }
