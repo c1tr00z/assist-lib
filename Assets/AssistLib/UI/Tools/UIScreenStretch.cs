@@ -32,12 +32,17 @@ namespace c1tr00z.AssistLib.UI {
             if (_canvasScaler == null) {
                 _canvasScaler = GetComponentInParent<CanvasScaler>();
             }
+
+            if (canvasScaler == null) {
+                return;
+            }
             
             if (_rectTransform == null) {
                 _rectTransform = GetComponentInParent<RectTransform>();
             }
 
             var scale = canvasScaler.transform.localScale;
+            
             
             rectTransform.position = new Vector3(Screen.width / 2, Screen.height / 2, transform.position.z);
 
