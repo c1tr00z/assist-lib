@@ -13,7 +13,7 @@ namespace c1tr00z.AssistLib.DataModels {
         #region IValueReceiver Implementation
 
         public bool isRecieverEnabled {
-            get { return isDataModelEnabled && GetModels().All(m => m.isDataModelEnabled); }
+            get { return GetModels().All(m => m.isDataModelEnabled); }
         }
         
         public abstract void UpdateReceiver();
