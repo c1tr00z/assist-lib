@@ -61,7 +61,14 @@ namespace c1tr00z.AssistLib.UI {
             var layer = layerPrefab.Clone(transform);
             layer.Init(layerDBEntry);
             _layers.Add(layerDBEntry, layer);
-            transform.SetChildrenSiblingIndex(c => c.GetComponent<Canvas>().sortingOrder);
+            transform.SetChildrenSiblingIndex(c => {
+                var canvas = c.GetComponent<Canvas>();
+                if (canvas == null) {
+                    return 1000;
+                }
+
+                return c.GetComponent<Canvas>().sortingOrder;
+            });
             return layer;
         }
 
