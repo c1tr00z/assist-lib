@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using c1tr00z.AssistLib.PropertyReferences;
 using UnityEngine;
 
 namespace c1tr00z.AssistLib.UI {
@@ -8,6 +8,10 @@ namespace c1tr00z.AssistLib.UI {
         public UIFrameDBEntry frameDBEntry;
 
         public bool showOnStart = false;
+        
+        [ReferenceType(typeof(object))]
+        [SerializeField]
+        private PropertyReference[] _argsSources;
 
         private IEnumerator Start() {
 
@@ -21,9 +25,14 @@ namespace c1tr00z.AssistLib.UI {
         }
 
         public void Show() {
-            if (frameDBEntry != null) {
-                UI.instance.Show(frameDBEntry);
+            if (frameDBEntry == null) {
+                return;
             }
+
+            var args = _argsSources == null
+                ? new object[0]
+                : _argsSources.SelectNotNull(s => s.Get<object>()).ToArray();
+            frameDBEntry.Show();
         }
     }
 }
