@@ -35,7 +35,7 @@ namespace c1tr00z.AssistLib.UI {
 
         public void Show(UIFrameDBEntry newFrame, params object[] args) {
             var requiredLayer = GetOrCreateLayer(newFrame.layer);
-            requiredLayer.Show(newFrame);
+            requiredLayer.Show(newFrame, args);
         }
 
         private UILayerBase GetOrCreateLayer(UILayerDBEntry layerDBEntry) {

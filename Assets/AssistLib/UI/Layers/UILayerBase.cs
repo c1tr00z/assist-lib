@@ -52,14 +52,9 @@ namespace c1tr00z.AssistLib.UI {
 
         protected UIFrame ShowFrame(UIFrameDBEntry frameItem, params object[] args) {
             var frame = frameItem.LoadFrame().Clone(rectTransform);
-            frame.Show(this);
+            frame.Show(this, args);
             frame.rectTransform.Stretch();
 
-            if (args != null && args.Length > 0) {
-                frame.SendMessage("OnShowParams", args, SendMessageOptions.DontRequireReceiver);
-            } else {
-                frame.SendMessage("OnShow", SendMessageOptions.DontRequireReceiver);
-            }
             return frame;
         }
 
