@@ -25,4 +25,10 @@ public static class TransformUtils {
 
         return new Vector2(cameraPosition.x / scale.x, cameraPosition.y / scale.y);
     }
+
+    public static void DestroyAllChildren(this Transform transform) {
+        var listDestroy = transform.GetChildren().ToList();
+        
+        listDestroy.ForEach(t => Object.DestroyImmediate(t.gameObject));
+    }
 }
