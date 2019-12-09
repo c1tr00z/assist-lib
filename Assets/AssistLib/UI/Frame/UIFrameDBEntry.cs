@@ -15,8 +15,8 @@ namespace c1tr00z.AssistLib.UI {
             return this.LoadPrefab<UIFrame>();
         }
 
-        public void Show() {
-            UI.instance.Show(this);
+        public void Show(params object[] args) {
+            UI.instance.Show(this, args);
         }
     }
 }
