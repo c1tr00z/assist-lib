@@ -11,9 +11,8 @@ namespace c1tr00z.AssistLib.PropertyReferences {
         public static T Get<T>(this PropertyReference propertyReference) {
             if (propertyReference.field == null) {
                 var key = propertyReference.GetPropertyKey();
-                propertyReference.component = propertyReference.GetTargetComponent();
                 if (!_properties.ContainsKey(key)) {
-                    var type = propertyReference.component.GetType();
+                    var type = propertyReference.target.GetType();
                     _properties.AddOrSet(key, type.GetPublicPropertyInfo(propertyReference.fieldName));
                 }
 
@@ -38,17 +37,11 @@ namespace c1tr00z.AssistLib.PropertyReferences {
         }
 
         private static string GetPropertyKey(this PropertyReference propertyReference) {
-            return $"{propertyReference.targetComponentTypeName}.{propertyReference.fieldName}";
+            return $"{propertyReference.target.GetType().FullName}.{propertyReference.fieldName}";
         }
 
         public static object GetValue(this PropertyReference propertyReference) {
-            return propertyReference.field.GetValue(propertyReference.component, null);
-        }
-
-        public static Component GetTargetComponent(this PropertyReference propertyReference) {
-            var componenetType = ReflectionUtils.GetTypeByName(propertyReference.targetComponentTypeName);
-            var allComponents = propertyReference.target.GetComponents(componenetType).ToUniqueList();
-            return allComponents[propertyReference.componentIndex];
+            return propertyReference.field.GetValue(propertyReference.target, null);
         }
     }
 }
