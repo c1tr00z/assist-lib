@@ -144,10 +144,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textSource:
-    target: {fileID: 117482274}
-    targetComponentTypeName: c1tr00z.AssistLib.DataModels.TextFormatTranslator
-    componentIndex: 0
-    fieldName: text
+    target: {fileID: 117482278}
+    fieldName: tag
 --- !u!114 &117482276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,10 +159,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textSources:
-  - target: {fileID: 934001086}
-    targetComponentTypeName: c1tr00z.AssistLib.PropertyReferences.SimpleTextSource
-    componentIndex: 0
-    fieldName: text
+  - target: {fileID: 934001087}
+    fieldName: tag
   _format: '{0}'
 --- !u!222 &117482277
 CanvasRenderer:
@@ -350,25 +346,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textSources:
-  - target: {fileID: 934001086}
-    targetComponentTypeName: c1tr00z.AssistLib.PropertyReferences.SimpleTextSource
-    componentIndex: 0
+  - target: {fileID: 934001088}
     fieldName: text
-  - target: {fileID: 1807073858}
-    targetComponentTypeName: c1tr00z.AssistLib.PropertyReferences.SimpleTextSource
-    componentIndex: 0
+  - target: {fileID: 1807073860}
     fieldName: text
-  - target: {fileID: 1749616977}
-    targetComponentTypeName: c1tr00z.AssistLib.PropertyReferences.SimpleTextSource
-    componentIndex: 0
+  - target: {fileID: 1749616979}
     fieldName: text
-  - target: {fileID: 2117083823}
-    targetComponentTypeName: c1tr00z.AssistLib.PropertyReferences.SimpleTextSource
-    componentIndex: 0
+  - target: {fileID: 2117083825}
     fieldName: text
-  - target: {fileID: 201238148}
-    targetComponentTypeName: c1tr00z.AssistLib.PropertyReferences.SimpleTextSource
-    componentIndex: 0
+  - target: {fileID: 201238150}
     fieldName: text
   _format: '{0} {1} {2} {3} {4}'
 --- !u!114 &464926918
@@ -384,9 +370,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textSource:
-    target: {fileID: 464926916}
-    targetComponentTypeName: c1tr00z.AssistLib.DataModels.TextFormatTranslator
-    componentIndex: 0
+    target: {fileID: 464926917}
     fieldName: text
 --- !u!222 &464926919
 CanvasRenderer:

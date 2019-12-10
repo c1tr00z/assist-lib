@@ -21,8 +21,7 @@ namespace c1tr00z.AssistLib.DataModels {
                 var references = GetReferences();
                 while (references.MoveNext()) {
                     var reference = references.Current;
-                    var targetComponent = reference.GetTargetComponent();
-                    var model = targetComponent as IDataModelBase;
+                    var model = reference.target as IDataModelBase;
                     if (model == null) {
                         continue;
                     }

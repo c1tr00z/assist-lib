@@ -13,7 +13,7 @@ namespace c1tr00z.AssistLib.DataModels {
         #region IValueReceiver Implementation
 
         public bool isRecieverEnabled {
-            get { return isDataModelEnabled && GetModels().All(m => m.isDataModelEnabled); }
+            get { return GetModels().All(m => m.isDataModelEnabled); }
         }
         
         public abstract void UpdateReceiver();
@@ -24,8 +24,7 @@ namespace c1tr00z.AssistLib.DataModels {
                 var references = GetReferences();
                 while (references.MoveNext()) {
                     var reference = references.Current;
-                    var targetComponent = reference.GetTargetComponent();
-                    var model = targetComponent as IDataModelBase;
+                    var model = reference.target as IDataModelBase;
                     if (model == null) {
                         continue;
                     }

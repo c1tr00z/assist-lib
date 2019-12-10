@@ -1,15 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Reflection;
+using UnityEngine;
 
 namespace c1tr00z.AssistLib.PropertyReferences {
-	[System.Serializable]
+    [System.Serializable]
     public class PropertyReference {
 
-        public GameObject target;
+        public Object target;
 
-        public string targetComponentTypeName;
-
-        public int componentIndex;
-
-		public string fieldName;
-	}
+        public string fieldName;
+        public PropertyInfo field { get; set; }
+    }
 }
