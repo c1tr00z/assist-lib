@@ -5,15 +5,9 @@ namespace c1tr00z.AssistLib.PropertyReferences {
     [System.Serializable]
     public class PropertyReference {
 
-        public GameObject target;
-
-        public string targetComponentTypeName;
-
-        public int componentIndex;
+        public Object target;
 
         public string fieldName;
-		
-        public Component component { get; set; }
         public PropertyInfo field { get; set; }
     }
 }
