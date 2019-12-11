@@ -19,13 +19,7 @@ namespace c1tr00z.AssistLib.DataModels {
         }
 
         public override void UpdateReceiver() {
-            var iList = (IList)_listSource.Get<object>();
-            var list = new List<object>();
-            var listEnum = iList.GetEnumerator();
-            while (listEnum.MoveNext()) {
-                list.Add(listEnum.Current);
-            }
-            _list.UpdateList(list);
+            _list.UpdateList(_listSource.GetList<object>());
         }
     }
 }

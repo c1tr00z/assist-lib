@@ -36,6 +36,23 @@ namespace c1tr00z.AssistLib.PropertyReferences {
             return default(T);
         }
 
+        public static List<T> GetList<T>(this PropertyReference propertyReference) {
+            var iList = (IList)propertyReference.Get<object>();
+            if (iList == null) {
+                return null;
+            }
+            var list = new List<T>();
+            var listEnum = iList.GetEnumerator();
+            while (listEnum.MoveNext()) {
+                var newItem = (T)listEnum.Current;
+                if (newItem != null) {
+                    list.Add(newItem);
+                }
+            }
+
+            return list;
+        }
+
         private static string GetPropertyKey(this PropertyReference propertyReference) {
             return $"{propertyReference.target.GetType().FullName}.{propertyReference.fieldName}";
         }
