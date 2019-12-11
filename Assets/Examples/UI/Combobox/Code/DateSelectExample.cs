@@ -13,13 +13,13 @@ namespace c1tr00z.AssistLib.UI {
         [SerializeField]
         private PropertyReference _yearSrc;
         
-        [ReferenceType(typeof(object))]
-        [SerializeField]
-        private PropertyReference _monthSrc;
-        
-        [ReferenceType(typeof(object))]
-        [SerializeField]
-        private PropertyReference _daySrc;
+//        [ReferenceType(typeof(object))]
+//        [SerializeField]
+//        private PropertyReference _monthSrc;
+//        
+//        [ReferenceType(typeof(object))]
+//        [SerializeField]
+//        private PropertyReference _daySrc;
 
         public List<int> years {
             get { return new List<int> {2019, 2020, 2021, 2022}; }
@@ -43,6 +43,10 @@ namespace c1tr00z.AssistLib.UI {
         public int selectedDay { get; private set; }
 
         private void Start() {
+            var now = DateTime.Now;
+            selectedYear = now.Year;
+            selectedMonth = now.Month;
+            selectedDay = now.Day;
             OnDataChanged();
         }
 
@@ -52,15 +56,15 @@ namespace c1tr00z.AssistLib.UI {
                 selectedYear = (int) yearObj;
             }
             
-            var monthObj = _monthSrc.Get<object>();
-            if (monthObj is int) {
-                selectedMonth = (int) monthObj;
-            }
-            
-            var dayObj = _daySrc.Get<object>();
-            if (dayObj is int) {
-                selectedDay = (int) dayObj;
-            }
+//            var monthObj = _monthSrc.Get<object>();
+//            if (monthObj is int) {
+//                selectedMonth = (int) monthObj;
+//            }
+//            
+//            var dayObj = _daySrc.Get<object>();
+//            if (dayObj is int) {
+//                selectedDay = (int) dayObj;
+//            }
         }
     }
 }

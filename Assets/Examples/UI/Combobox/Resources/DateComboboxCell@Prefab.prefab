@@ -263,7 +263,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textSource:
-    target: {fileID: 2085861348050197033}
-    targetComponentTypeName: c1tr00z.AssistLib.UI.YearListItemView
-    componentIndex: 0
+    target: {fileID: 8943086284451808799}
     fieldName: year

@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using c1tr00z.AssistLib.DataModels;
 using c1tr00z.AssistLib.PropertyReferences;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace c1tr00z.AssistLib.UI {
-    public class UICombobox : DataModelBase {
+    public class UICombobox : MonoBehaviour {
 
         #region Private Fields
 
@@ -24,10 +25,10 @@ namespace c1tr00z.AssistLib.UI {
         [SerializeField] private RectTransform _cancelObject;
 
         [SerializeField] private RectTransform _optionsObject;
-
-        [ReferenceTypeAttribute(typeof(object))]
-        [SerializeField]
-        private PropertyReference _valueSrc;
+        
+        [SerializeField] private UIList _optionsList;
+        
+        [SerializeField] private UIListItem _currentValue;
 
         #endregion
 
@@ -36,8 +37,6 @@ namespace c1tr00z.AssistLib.UI {
         public object selectedValue { get; private set; }
         
         public bool isShowOptions { get; private set; }
-        
-        public bool isShowCurrentValue { get; private set; }
 
         #endregion
 
@@ -50,8 +49,15 @@ namespace c1tr00z.AssistLib.UI {
             OnSelected();
         }
 
+        public void UpdateCombobox(List<object> options, object selectedValue) {
+            _optionsList.UpdateList(options);
+            this.selectedValue = selectedValue;
+            UpdateControls();
+        }
+
         public void OnSelected() {
-            selectedValue = _valueSrc.Get<object>();
+            selectedValue = _optionsList.selectedValue;
+            _currentValue.gameObject.SetActive(true);
             _onSelected?.Invoke();
             UpdateControls();
             ResetControls();
@@ -59,18 +65,16 @@ namespace c1tr00z.AssistLib.UI {
 
         public void ResetControls() {
             isShowOptions = false;
-            isShowCurrentValue = !isShowOptions;
+            _currentValue.gameObject.SetActive(!isShowOptions);
             UpdateControls();
             AttachControls();
-            OnDataChanged();
         }
 
         public void ShowOptions() {
             isShowOptions = true;
-            isShowCurrentValue = !isShowOptions;
+            _currentValue.gameObject.SetActive(!isShowOptions);
             UpdateControls();
             DetachControls();
-            OnDataChanged();
         }
 
         private void DetachControls() {
@@ -107,6 +111,8 @@ namespace c1tr00z.AssistLib.UI {
             if (_optionsObject != null) {
                 _optionsObject.gameObject.SetActive(isShowOptions);
             }
+            
+            _currentValue.UpdateItem(selectedValue);
         }
     }
 }
