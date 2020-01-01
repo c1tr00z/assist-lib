@@ -50,15 +50,17 @@ namespace c1tr00z.AssistLib.UI {
         }
 
         public void UpdateCombobox(List<object> options, object selectedValue) {
-            _optionsList.UpdateList(options);
             this.selectedValue = selectedValue;
+            _optionsList.UpdateList(options, selectedValue);
             UpdateControls();
         }
 
         public void OnSelected() {
+            Debug.LogError(selectedValue);
             selectedValue = _optionsList.selectedValue;
             _currentValue.gameObject.SetActive(true);
             _onSelected?.Invoke();
+            Debug.LogError(selectedValue);
             UpdateControls();
             ResetControls();
         }
