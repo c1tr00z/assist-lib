@@ -21,7 +21,7 @@ namespace c1tr00z.AssistLib.UI {
 
         public object selectedValue { get; private set; }
 
-        public void UpdateList<T>(IEnumerable<T> items) {
+        public void UpdateList<T>(IEnumerable<T> items, T selectedItem = default(T)) {
             if (_listItems != null) {
                 foreach (var listItem in _listItems) {
                     Destroy(listItem.gameObject);
@@ -34,7 +34,7 @@ namespace c1tr00z.AssistLib.UI {
                 CreateListItem(item);
             }
 
-            if (_useSelect && _listItems.Count > 0 &&!_listItems.Any(li => li.isSelected)) {
+            if (_useSelect && (selectedItem != null && !selectedItem.Equals(default(T))) && _listItems.Count > 0 &&!_listItems.Any(li => li.isSelected)) {
                 Select(_listItems.FirstOrDefault());
             }
         }
