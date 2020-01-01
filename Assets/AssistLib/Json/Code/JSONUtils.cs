@@ -7,44 +7,18 @@ using UnityEngine;
 public static class JSONUtuls {
 
     public static string Serialize(object objectToSerialize) {
-        if (objectToSerialize is IJsonSerializable) {
-            var json = new Dictionary<string, object>();
-            (objectToSerialize as IJsonSerializable).Serialize(json);
-            objectToSerialize = json;
-        } else if (objectToSerialize is Dictionary<string, object>) {
-            var newDic = new Dictionary<string, object>();
-            (objectToSerialize as Dictionary<string, object>).ForEach(kvp => {
-                var value = kvp.Value;
-                if (value is IJsonSerializable) {
-                    var json = new Dictionary<string, object>();
-                    (value as IJsonSerializable).Serialize(json);
-                    newDic.Add(kvp.Key, json);
-                }
-                else {
-                    newDic.Add(kvp.Key, kvp.Value);
-                }
-
-                objectToSerialize = newDic;
-            });
-        } else if (objectToSerialize is Dictionary<object, object>) {
-            //
-        } else if (objectToSerialize is IEnumerable<object>) {
-            var list = new List<object>();
-            (objectToSerialize as IEnumerable<object>).ForEach(o => {
-                if (o is IJsonSerializable) {
-                    var json = new Dictionary<string, object>();
-                    (o as IJsonSerializable).Serialize(json);
-                    list.Add(json);
-                }
-                else {
-                    list.Add(o);
-                }
-
-                objectToSerialize = list;
-            });
-        }
-        
         return Json.Serialize(objectToSerialize);
+    }
+
+    private static object SerializeSerializable(IJsonSerializable serializable) {
+        var json = new Dictionary<string, object>();
+        serializable.Serialize(json);
+        return json;
+    }
+
+    private static bool IsEnumerable(object obj) {
+        return obj is IEnumerable<object> ||
+               obj is List<object> || obj is Array;
     }
 
     public static Dictionary<string, object> Deserialize(string jsonString) {
@@ -76,8 +50,21 @@ public static class JSONUtuls {
         return value is T[]
             ? (T[])value
             : value is List<object>
-                ? ((List<object>)value).SelectNotNull(o => (T)o)
+                ? ((List<object>)value).SelectNotNull(TryGet<T>)
                 : new List<T>();
+    }
+
+    private static T TryGet<T>(object o) {
+        if (o is T) {
+            return (T) o;
+        }
+        
+        var dic = o as Dictionary<string, object>;
+        if (dic != null) {
+            return TryGetDeserializeable<T>(dic);
+        }
+
+        return default(T);
     }
 
     public static Dictionary<string, object> GetChild(this Dictionary<string, object> json, string key) {
@@ -85,7 +72,7 @@ public static class JSONUtuls {
     }
     
     public static T TryGetDeserializeable<T>(this Dictionary<string, object> json) {
-        if (typeof(T).IsSubclassOf(typeof(IJsonDeserializable))) {
+        if (typeof(IJsonDeserializable).IsAssignableFrom(typeof(T))) {
             var deserializeable = (T) Activator.CreateInstance(typeof(T));
             ((IJsonDeserializable)deserializeable).Deserialize(json);
             return deserializeable;
