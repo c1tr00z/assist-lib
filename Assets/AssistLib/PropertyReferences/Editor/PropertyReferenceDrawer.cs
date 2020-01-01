@@ -61,7 +61,11 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
                 }
             });
 
-			selectedComponentIndex = selectedComponentIndex < componentsByType[selectedType].Count ? selectedComponentIndex : 0;
+            if (!componentsByType.ContainsKey(selectedType)) {
+	            selectedType = allComponents.First().GetType();
+            }
+
+            selectedComponentIndex = selectedComponentIndex < componentsByType[selectedType].Count ? selectedComponentIndex : 0;
 			var selectedComponent = componentsByType[selectedType][selectedComponentIndex];
 			var selectedTypeIndex = allComponents.IndexOf(selectedComponent);
 
@@ -86,8 +90,14 @@ namespace c1tr00z.AssistLib.PropertyReferences.Editor {
 				var list = allProperties;
 				allProperties = new List<PropertyInfo>();
 				allProperties.AddRange(list.Where(p => p.PropertyType == drawerAttribute.type));
-				allProperties.AddRange(list.Where(p => p.PropertyType.IsSubclassOf(drawerAttribute.type)));
-				allProperties.AddRange(list.Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == drawerAttribute.type));
+				if (drawerAttribute.type == typeof(string)) {
+					allProperties.AddRange(list.Where(p => p.PropertyType != drawerAttribute.type));
+				}
+				else {
+					allProperties.AddRange(list.Where(p => p.PropertyType.IsSubclassOf(drawerAttribute.type)));
+					allProperties.AddRange(list.Where(p => p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == drawerAttribute.type));
+				}
+				
 				if (drawerAttribute.type.IsSubclassOf(typeof(string))) {
 					allProperties.AddRange(list.Where(p => !p.PropertyType.IsSubclassOf(drawerAttribute.type)));
 				}

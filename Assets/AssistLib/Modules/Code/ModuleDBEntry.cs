@@ -4,11 +4,7 @@ using UnityEngine;
 
 public class ModuleDBEntry : DBEntry {
 
-    [SerializeField] private int _priority;
+    public int priority;
 
-    public int priority {
-        get {
-            return _priority;
-        }
-    }
+    public bool enabled = false;
 }
