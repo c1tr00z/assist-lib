@@ -24,7 +24,11 @@ public class PlayerPrefsLocalData : MonoBehaviour {
 
     public static Dictionary<string, object> GetDataNode(string key) {
         CheckLoading();
-        return _playerPrefsLocalData.ContainsKey(key) ? (Dictionary<string, object>)_playerPrefsLocalData[key] : new Dictionary<string, object>();
+        return _playerPrefsLocalData.ContainsKey(key) 
+            ? _playerPrefsLocalData[key] is string 
+                ? JSONUtuls.Deserialize(_playerPrefsLocalData[key].ToString()) 
+                : (Dictionary<string, object>)_playerPrefsLocalData[key] 
+            : new Dictionary<string, object>();
     }
 
     public static void SetDataNode(string key, Dictionary<string, object> node) {
