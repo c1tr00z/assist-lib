@@ -31,6 +31,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using c1tr00z.AssistLib.Json;
 using UnityEngine;
 
 namespace MiniJSON {
@@ -434,6 +435,10 @@ namespace MiniJSON {
                     SerializeObject(asDict);
                 } else if (value is char) {
                     SerializeString(value.ToString());
+                } else if (value is IJsonSerializable) {
+                    var dic = new Dictionary<string, object>();
+                    (value as IJsonSerializable).Serialize(dic);
+                    SerializeObject(dic);
                 } else {
                     SerializeOther(value);
                 }
