@@ -82,8 +82,6 @@ namespace AssistLib.TypeReferences.Editor {
                 currentType = currentType
             };
             
-            Debug.LogError(path);
-            
             _properties.Add(path, propertyData);
 
             return propertyData;
