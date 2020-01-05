@@ -19,7 +19,7 @@ namespace c1tr00z.AssistLib.DataBase.Editor {
         }
 
         private static bool ContainsAsset(string[] paths) {
-            return paths.Any(p => p.ToLower().EndsWith(".asset") || p.Contains("@"));
+            return paths.Any(p => p.Contains("Resources") && (p.ToLower().EndsWith(".asset") || p.Contains("@")));
         }
     }
 }
