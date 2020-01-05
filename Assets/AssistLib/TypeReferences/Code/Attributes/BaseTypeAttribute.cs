@@ -4,9 +4,12 @@ namespace c1tr00z.AssistLib.TypeReferences {
 
     public class BaseTypeAttribute : PropertyAttribute {
         public System.Type type { get; private set; }
+        
+        public bool includeBaseClass { get; private set; }
 
-        public BaseTypeAttribute (System.Type type) {
+        public BaseTypeAttribute (System.Type type, bool includeBaseClass = false) {
             this.type = type;
+            this.includeBaseClass = includeBaseClass;
         }
         
         public override bool Match (object obj) {
