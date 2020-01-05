@@ -30,7 +30,7 @@ namespace AssistLib.TypeReferences.Editor {
 
             var currentTypeName = propertyData.typeFullNameProperty.stringValue;
             currentTypeName = string.IsNullOrEmpty(currentTypeName) ? propertyData.typesNames.FirstOrDefault() : currentTypeName;
-            if (currentTypeName != propertyData.currentType.FullName || propertyData.currentType == null) {
+            if (propertyData.currentType == null || currentTypeName != propertyData.currentType.FullName) {
                 propertyData.currentType = propertyData.types.FirstOrDefault(t => t.FullName == currentTypeName);
             }
             var selectedIndex = propertyData.types.IndexOf(propertyData.currentType);
@@ -59,7 +59,11 @@ namespace AssistLib.TypeReferences.Editor {
                     : typeof(object) 
                 : typeof(object);
 
-            var typesList = ReflectionUtils.GetSubclassesOf(baseClass).ToList();
+            var typesList = new List<Type>();
+            if (baseTypeAttribute.includeBaseClass && baseClass != typeof(object) && !baseClass.IsAbstract) {
+                typesList.Add(baseClass);
+            }
+            typesList.AddRange(ReflectionUtils.GetSubclassesOf(baseClass));
             if (typesList.Count == 0) {
                 if (!baseClass.IsAbstract) {
                     typesList.Add(baseClass);
